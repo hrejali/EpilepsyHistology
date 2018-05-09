@@ -10,3 +10,5 @@ contains 3 componets GM == 1, WM == 2, Background ==3, addtionally can have thir
 ignore.The function takes in two parameters:
   1) Input directory (Mandatory)
   2) Output directory (Default is current directory)  
+
+Read [Coordinate System for the Cortical Laminae](../AIP.pdf) file for more information about motivations and methods for the ProfileComp script. 
