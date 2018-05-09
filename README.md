@@ -11,4 +11,4 @@ ignore.The function takes in two parameters:
   1) Input directory (Mandatory)
   2) Output directory (Default is current directory)  
 
-Read [Coordinate System for the Cortical Laminae](../AIP.pdf) file for more information about motivations and methods for the ProfileComp script. 
+Read [Coordinate System for the Cortical Laminae](https://github.com/hrejali/EpilepsyHistology/blob/master/AIP_PROJECT.pdf) file for more information about motivations and methods for the ProfileComp script. 
