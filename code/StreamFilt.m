@@ -4,10 +4,10 @@ function [StreamFilt]= StreamFilt(Seg,Stream)
 %Date: May 16th,2018
 %Title: Profile Filtering
 %% ............................Description................................
-% ProfileFilt(ImgSeg,Profile)
-% Profiles may end beyon the domain of the laplace solution (beyond GM
+% StreamFilt(ImgSeg,Profile)
+% Streamlines may end beyon the domain of the laplace solution (beyond GM
 % region), therefore we use the segmented image (ImgSeg) to mask out
-% regions in which the profile is out of range
+% regions in which the points of streamline is out of range
 
 % 1) <Seg>: Segmented image assuming labels are as follows: GM==1, WM==2
 % Background==3 and Ignore==4
