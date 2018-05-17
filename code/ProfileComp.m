@@ -7,7 +7,7 @@ function [Output]= ProfileComp(Image_dir,Output_dir)
 %% ............................Description................................
 % ProfileComp(Image_dir,Output_dir)
 % NOTE that the laplcian solver and number of other functions are dependent
-% on the following github repository: 
+% on the following github repository:
 % https://github.com/jordandekraker/HippUnfolding.git
 
 % 1) Input directory specifying the segmeneted histological slice
@@ -17,13 +17,13 @@ function [Output]= ProfileComp(Image_dir,Output_dir)
 
 %% .....................Check number of inputs........................
 if nargin == 1   % if the number of inputs equals 1
-  Output_dir = '.'; % set output directory to the current directory 
+    Output_dir = '.'; % set output directory to the current directory
 end
 %% ..................Import and Check Image Dim...........................
 HSeg_Im = load_nii(Image_dir);
 if(ndims(HSeg_Im.img)==2)
-    % Makign the 2D image a 3D image to allow the Laplace equation to run 
-    HSeg_Im.img(:,:,2) = zeros(size(HSeg_Im.img)); 
+    % Makign the 2D image a 3D image to allow the Laplace equation to run
+    HSeg_Im.img(:,:,2) = zeros(size(HSeg_Im.img));
 end
 %% ........DEFINE FORGROUND SOURCE AND SINK (BOUNDARY COND SETUP)...........
 sz = size(HSeg_Im.img);
@@ -69,11 +69,11 @@ edgesGB = imdilate(HSeg_Im.img==3,se) & HSeg_Im.img==1;
 streams1 = stream2(dx,dy,startpts2,startpts1, [1 1000000]);
 %% ....................... GM Surface Stream lines.........................
 %converts start points to list of x y z coordinates for Background/GM Boundary
-[startpts1,startpts2] = ind2sub(size(edgesGB),find(edgesGB(:,:,1)==1)); 
+[startpts1,startpts2] = ind2sub(size(edgesGB),find(edgesGB(:,:,1)==1));
 % Compute the gradient of the laplacian ImLap
 [dx,dy]=gradient(ImLap);
 %This returns a list of streamlines for GM Surface
-streams2 = stream2(-dx,-dy,startpts2,startpts1, [1 1000000]); 
+streams2 = stream2(-dx,-dy,startpts2,startpts1, [1 1000000]);
 %% .................................DISPLAY................................
 % Display Laplace image
 figure; hold on
