@@ -1,4 +1,4 @@
-function [ProfileFilt]= ProfileFilt(Seg,Profile)
+function [StreamFilt]= StreamFilt(Seg,Stream)
 %Name: Hossein Rejali
 %Supervisor: Dr. Ali Khan
 %Date: May 16th,2018
@@ -11,25 +11,26 @@ function [ProfileFilt]= ProfileFilt(Seg,Profile)
 
 % 1) <Seg>: Segmented image assuming labels are as follows: GM==1, WM==2
 % Background==3 and Ignore==4
-% 2) <Profile>: Single Profile or Streamline obtained from the segmented image 
-% 3) <ProfileFilt>: Filtered out Streamline by masking out points outside
+% 2) <Stream>: Single Profile or Streamline obtained from the segmented image 
+% 3) <StreamFilt>: Filtered out Streamline by masking out points outside
 % of GM region
 %% ...........................Initialize Variables........................
-Profile=cell2mat(Profile); % convert to matrix 
-len=size(Profile);
+Stream=cell2mat(Stream); % convert to matrix 
+len=size(Stream);
 %% ...............................Mask values.............................
 % Check if x y coordinates of the streamline fall outside of GM region
 for(i=1:len(1))
-    vec=Profile(i,:); 
+    vec=Stream(i,:); 
     x=vec(1);y=vec(2);
     if(Seg(round(y),round(x))~=1)
-        ProfileFilt(i,:)=nan;
+        %Assumption that after the first point outside the boundary 
+        % correspond to garbage data
+        break; 
+       
     else
-        ProfileFilt(i,:)=Profile(i,:);
+        StreamFilt(i,:)=Profile(i,:);
     end
 end
-%Get rid of the NaN values entierly
-ProfileFilt(isnan(ProfileFilt))=[];
 
 
 end
