@@ -9,13 +9,19 @@ function [StreamFilt]= StreamFilt(Seg,Stream)
 % region), therefore we use the segmented image (ImgSeg) to mask out
 % regions in which the points of streamline is out of range
 
+%Inputs:
 % 1) <Seg>: Segmented image assuming labels are as follows: GM==1, WM==2
 % Background==3 and Ignore==4
-% 2) <Stream>: Single Profile or Streamline obtained from the segmented image 
-% 3) <StreamFilt>: Filtered out Streamline by masking out points outside
+% 2) <Stream>: Single Profile or Streamline obtained from the segmented image
+
+%Outputs
+% 1) <StreamFilt>: Filtered out Streamline by masking out points outside
 % of GM region
 %% ...........................Initialize Variables........................
-Stream=cell2mat(Stream); % convert to matrix 
+%check if cell array
+if(iscell(Stream))
+    Stream=cell2mat(Stream); % convert to matrix
+end
 len=size(Stream);
 %% ...............................Mask values.............................
 % Check if x y coordinates of the streamline fall outside of GM region
@@ -28,7 +34,7 @@ for(i=1:len(1))
         break; 
        
     else
-        StreamFilt(i,:)=Profile(i,:);
+        StreamFilt(i,:)=Stream(i,:);
     end
 end
 

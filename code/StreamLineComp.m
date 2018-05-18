@@ -10,9 +10,12 @@ function [Output]= StreamLineComp(Image_dir,Output_dir)
 % on the following github repository:
 % https://github.com/jordandekraker/HippUnfolding.git
 
+%Inputs:
 % 1) Input directory specifying the segmeneted histological slice
 % 2) Output directory; specifies location to save the laplcian image as a
 % compressed nifti
+
+%Outputs:
 % 3) Output is a structure containing the streamlines with header info
 
 %% .....................Check number of inputs........................
