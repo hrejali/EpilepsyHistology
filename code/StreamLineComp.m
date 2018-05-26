@@ -62,21 +62,24 @@ se = strel('sphere',1);
 edgesWG = imdilate(HSeg_Im.img==2,se) & HSeg_Im.img==1;
 %this finds start points on the forground edge
 edgesGB = imdilate(HSeg_Im.img==3,se) & HSeg_Im.img==1;
+%% ....................... SORT SEED POINTS ...............................
+seg=HSeg_Im.img(:,:,1);
+[GBSorted, WGSorted]=SortSeedSub(seg); % sorts the boundary subscripts
 
 %% .....................WM/GM Boundary Stream lines......................
-%converts start points to list of x y z coordinates for WM/GM Boundary
-[startpts1,startpts2] = ind2sub(size(edgesWG),find(edgesWG(:,:,1)==1));
+%converts start points to list of x y coordinates for WM/GM Boundary
+%[startpts1,startpts2] = ind2sub(size(edgesWG),find(edgesWG(:,:,1)==1));
 % Compute the gradient of the laplacian ImLap
 [dx,dy]=gradient(ImLap);
 %This returns a list of streamlines, which can be viewed with streamline()
-streams1 = stream2(dx,dy,startpts2,startpts1, [1 1000000]);
+streams1 = stream2(dx,dy,WGSorted(:,2),WGSorted(:,1),[1 1000000]);
 %% ....................... GM Surface Stream lines.........................
 %converts start points to list of x y z coordinates for Background/GM Boundary
-[startpts1,startpts2] = ind2sub(size(edgesGB),find(edgesGB(:,:,1)==1));
+%[startpts1,startpts2] = ind2sub(size(edgesGB),find(edgesGB(:,:,1)==1));
 % Compute the gradient of the laplacian ImLap
 [dx,dy]=gradient(ImLap);
 %This returns a list of streamlines for GM Surface
-streams2 = stream2(-dx,-dy,startpts2,startpts1, [1 1000000]);
+streams2 = stream2(-dx,-dy,GBSorted(:,2),GBSorted(:,1), [1 1000000]);
 %% .................................DISPLAY................................
 % Display Laplace image
 figure; hold on

@@ -27,7 +27,7 @@ function [GBSorted WGSorted]= SortSeedSub(seg)
 %% .......................... Boundary Extraction .......................
 se = strel('sphere',1);
 %this finds start points on the source edge inside the greymatter
-edgesWG = imdilate(seg==1,se) & seg==2;
+edgesWG = imdilate(seg==2,se) & seg==1;
 %this finds start points on the forground edge
 edgesGB = imdilate(seg==3,se) & seg==1;
 % requires a bit of a hack, will need to remove ignore points after sorting 

@@ -29,12 +29,11 @@ for(i=1:len(1))
     vec=Stream(i,:); 
     x=vec(1);y=vec(2);
     if(Seg(round(y),round(x))==1)
-        StreamFilt(i,:)=Stream(i,:);
-
-    else
-        %Assumption that after the first point outside the boundary
+        %Assumption that after the first point outside the boundary 
         % correspond to garbage data
-        break;
+        break; 
+       
+    else
     end
 end
 
