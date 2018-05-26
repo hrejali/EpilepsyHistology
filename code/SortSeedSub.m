@@ -1,0 +1,108 @@
+%Name: Hossein Rejali
+%Supervisor: Dr. Ali Khan
+%Date: May 22nd,2018
+%Title: Sort Boundary/Seed Subscripts (x,y)
+function [GBSorted WGSorted]= SortSeedSub(seg)
+%% ............................Description................................
+% SortSeedSub(Img,Seg)
+% Sorts the Boundary subscripts based on the following function:
+%                        bwtraceboundary()
+% This function requires an inital start point, a Binary image with
+% boundary of interest as the foreground. Also requires max number of
+% points and inital direction for search.
+
+% Assumes the intersection b/w: WM, GM, BG and Ignore Mask can be specified as
+% the initial start point -- Note code can be changed to work under the
+% assumption that intersection b/w BG, WM, GM as an initial start point.
+
+%Inputs:
+% 1) <Seg>: Segmented image: (GM==1,WM==2,Background==3,Ignore maske==4)
+%https://www.mathworks.com/help/images/ref/bwtraceboundary.html
+
+%Outputs:
+% 1) <GMSub>: Sorted GM Subscripts
+% 2) <WMSub>: Sorted WM Subscripts
+
+
+%% .......................... Boundary Extraction .......................
+se = strel('sphere',1);
+%this finds start points on the source edge inside the greymatter
+edgesWG = imdilate(seg==1,se) & seg==2;
+%this finds start points on the forground edge
+edgesGB = imdilate(seg==3,se) & seg==1;
+% requires a bit of a hack, will need to remove ignore points after sorting 
+edgesG=edgesGB + (imdilate(seg==4,se) & seg==1);
+%% ............................Starting Point.............................
+se = strel('sphere',1);
+%Intersection of the 4 labels is assumed to be the starting point
+%This point corresponds to neighbouring ignore location (seg==4) in seg
+% Note because the Boundary is not closed we will produce 2 starting points
+StartPt = imdilate(seg==1,se) & imdilate(seg==2,se) & imdilate(seg==3,se) & seg==4;
+[Px,Py]=find(StartPt==1);
+
+% Start points of boundary is in the 8 neighbourhood of StartPt
+for x=-1:1
+    for y=-1:1
+        % First WM start Point
+        if(edgesWG( x+Px(1),y+Py(1) ))
+            WMStart=[x+Px(1) y+Py(1)];
+        end
+        
+        % First GM start Point
+        if(edgesG( x+Px(1),y+Py(1) ))
+            GMStart=[x+Px(1) y+Py(1)];
+        end
+
+    end
+end
+%% ............................Direction.............................
+% dictionary for interpertation for x,y in the for loop
+dirMatrix=["NW","N","NE";
+    "W", "", "E";
+    "SW","S","SE"];
+%initializing dir variables 
+dirWG='';
+dirGB='';
+% 8 connected neighbourhood check for direction 
+for x=-1:1
+    for y=-1:1
+        if(~(x==0 && y==0))
+            if( edgesWG( WMStart(1)+x,WMStart(2)+y ) )
+                dirWG=dirMatrix(2+x,2+y);
+            end
+            if( edgesG( GMStart(1)+x,GMStart(2)+y ) )
+                dirGB=dirMatrix(2+x,2+y);
+            end
+        end
+    end
+end
+%% ......................... Sorting.....................................
+% Max # of boundary pixels to extract
+GBSize=sum(edgesG(:)==1);
+WGSize=sum(edgesWG(:)==1);
+
+[GBSorted]=bwtraceboundary(edgesG,GMStart,dirGB,8,GBSize);
+[WGSorted]=bwtraceboundary(edgesWG,WMStart,dirWG,8,WGSize);
+
+% Find points in image that correspond to ingore points
+ImgIgnore=edgesG-edgesGB;
+
+[IgnorePts(:,1),IgnorePts(:,2)]=find(ImgIgnore==1);
+szIgnore=size(IgnorePts);
+
+for i=1:szIgnore
+    %Find the row and column point to ignore
+    row=IgnorePts(i,1);
+    col=IgnorePts(i,2);
+    
+    %find the index which index occurs in the GBSorted variable
+    temp=GBSorted(:,1)==row & GBSorted(:,2)==col;
+    index=find(temp==1);
+    
+    %Delete index
+    GBSorted(index,:)=[];
+    
+    
+end
+
+end
