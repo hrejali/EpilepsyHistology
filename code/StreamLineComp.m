@@ -80,6 +80,15 @@ streams1 = stream2(dx,dy,WGSorted(:,2),WGSorted(:,1),[1 1000000]);
 [dx,dy]=gradient(ImLap);
 %This returns a list of streamlines for GM Surface
 streams2 = stream2(-dx,-dy,GBSorted(:,2),GBSorted(:,1), [1 1000000]);
+%% ..................... Filter Streamline Points ......................
+sz1=size(streams1);
+sz2=size(streams2);
+for i=1:sz1(2)
+    streams1(i)=StreamFilt(seg,streams1(i));
+end
+for i=1:sz2(2)
+    streams2(i)=StreamFilt(seg,streams2(i));
+end
 %% .................................DISPLAY................................
 % Display Laplace image
 figure; hold on

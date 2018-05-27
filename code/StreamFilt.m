@@ -37,6 +37,8 @@ for(i=1:len(1))
         break;
     end
 end
-
+sz=size(StreamFilt);
+%convert back to cell
+StreamFilt=mat2cell(StreamFilt,sz(1),sz(2));
 
 end

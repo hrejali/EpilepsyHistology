@@ -59,12 +59,12 @@ ImLap(snk) = 1;
 %% ...................BOUNDRY CONDITION EXTRACTION.........................
 se = strel('sphere',1);
 %this finds start points on the source edge inside the greymatter
-edgesWG = imdilate(HSeg_Im.img==1,se) & HSeg_Im.img==2;
+edgesWG = imdilate(HSeg_Im.img==2,se) & HSeg_Im.img==1;
 %this finds start points on the forground edge
 edgesGB = imdilate(HSeg_Im.img==3,se) & HSeg_Im.img==1;
 %% ....................... SORT SEED POINTS ...............................
-seg=HSeg_Im.img(:,:,1)
-[GBSorted, WGSorted]=SortSeedSub(HSeg_Im.img); % sorts the boundary subscripts
+seg=HSeg_Im.img(:,:,1);
+[GBSorted, WGSorted]=SortSeedSub(seg); % sorts the boundary subscripts
 
 %% .....................WM/GM Boundary Stream lines......................
 %converts start points to list of x y coordinates for WM/GM Boundary
@@ -80,6 +80,10 @@ streams1 = stream2(dx,dy,WGSorted(:,2),WGSorted(:,1),[1 1000000]);
 [dx,dy]=gradient(ImLap);
 %This returns a list of streamlines for GM Surface
 streams2 = stream2(-dx,-dy,GBSorted(:,2),GBSorted(:,1), [1 1000000]);
+%% ..................... Filter Streamline Points ......................
+sz1=size(Stream1);
+sz2=size(Stream2);
+
 %% .................................DISPLAY................................
 % Display Laplace image
 figure; hold on
