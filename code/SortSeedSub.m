@@ -2,7 +2,7 @@
 %Supervisor: Dr. Ali Khan
 %Date: May 22nd,2018
 %Title: Sort Boundary/Seed Subscripts (x,y)
-function [GBSorted WGSorted]= SortSeedSub(seg)
+function [GBSorted, WGSorted,IgnoreMask]= SortSeedSub(seg)
 %% ............................Description................................
 % SortSeedSub(Img,Seg)
 % Sorts the Boundary subscripts based on the following function:
@@ -22,6 +22,8 @@ function [GBSorted WGSorted]= SortSeedSub(seg)
 %Outputs:
 % 1) <GMSub>: Sorted GM Subscripts
 % 2) <WMSub>: Sorted WM Subscripts
+% 3) <IgnoreMask>: Mask for Ignore points for the sorted GM subscripts
+% IgnoreMask==0 (Ignore Points) IgnoreMask==1 (Valid GM start points)
 
 
 %% .......................... Boundary Extraction .......................
@@ -89,7 +91,8 @@ ImgIgnore=edgesG-edgesGB;
 
 [IgnorePts(:,1),IgnorePts(:,2)]=find(ImgIgnore==1);
 szIgnore=size(IgnorePts);
-
+szTotal=size(GBSorted);
+IgnoreMask=ones(szTotal(1),1);
 for i=1:szIgnore
     %Find the row and column point to ignore
     row=IgnorePts(i,1);
@@ -100,8 +103,10 @@ for i=1:szIgnore
     index=find(temp==1);
     
     %Delete index
-    GBSorted(index,:)=[];
+    %GBSorted(index,:)=nan;
     
+    %instead of deleting points make a mask incase information is needed
+    IgnoreMask(index)=0;
     
 end
 

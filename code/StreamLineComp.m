@@ -38,7 +38,7 @@ numiter=5000;
 LPfield = laplace_solver(fg,src,snk,numiter,[],sz);
 LPfieldImage = HSeg_Im;
 LPfieldImage.img = zeros(sz);
-LPfieldImage.img(fg) = LPfield;
+LPfieldImage.img(fg) = LPfield*100;% decimal values are rounded when save
 LPfieldImage.img(:,:,2) = [];
 
 %% ......................SAVE LAPLACIAN IMAGE..............................
@@ -64,7 +64,7 @@ edgesWG = imdilate(HSeg_Im.img==2,se) & HSeg_Im.img==1;
 edgesGB = imdilate(HSeg_Im.img==3,se) & HSeg_Im.img==1;
 %% ....................... SORT SEED POINTS ...............................
 seg=HSeg_Im.img(:,:,1);
-[GBSorted, WGSorted]=SortSeedSub(seg); % sorts the boundary subscripts
+[GBSorted, WGSorted,IgnoreMask]=SortSeedSub(seg); % sorts the boundary subscripts
 
 %% .....................WM/GM Boundary Stream lines......................
 %converts start points to list of x y coordinates for WM/GM Boundary
@@ -78,6 +78,8 @@ streams1 = stream2(dx,dy,WGSorted(:,2),WGSorted(:,1),[1 1000000]);
 %[startpts1,startpts2] = ind2sub(size(edgesGB),find(edgesGB(:,:,1)==1));
 % Compute the gradient of the laplacian ImLap
 [dx,dy]=gradient(ImLap);
+%Delete all points that need to be ignored obtained from IgnoreMask 
+GBSorted(IgnoreMask==0,:)=[];
 %This returns a list of streamlines for GM Surface
 streams2 = stream2(-dx,-dy,GBSorted(:,2),GBSorted(:,1), [1 1000000]);
 %% ..................... Filter Streamline Points ......................

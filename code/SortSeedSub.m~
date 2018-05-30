@@ -2,7 +2,7 @@
 %Supervisor: Dr. Ali Khan
 %Date: May 22nd,2018
 %Title: Sort Boundary/Seed Subscripts (x,y)
-function [GBSorted WGSorted]= SortSeedSub(seg)
+function [GBSorted, WGSorted,IgnoreMask]= SortSeedSub(seg)
 %% ............................Description................................
 % SortSeedSub(Img,Seg)
 % Sorts the Boundary subscripts based on the following function:
@@ -12,7 +12,8 @@ function [GBSorted WGSorted]= SortSeedSub(seg)
 % points and inital direction for search.
 
 % Assumes the intersection b/w: WM, GM, BG and Ignore Mask can be specified as
-% the initial start point.
+% the initial start point -- Note code can be changed to work under the
+% assumption that intersection b/w BG, WM, GM as an initial start point.
 
 %Inputs:
 % 1) <Seg>: Segmented image: (GM==1,WM==2,Background==3,Ignore maske==4)
@@ -21,12 +22,14 @@ function [GBSorted WGSorted]= SortSeedSub(seg)
 %Outputs:
 % 1) <GMSub>: Sorted GM Subscripts
 % 2) <WMSub>: Sorted WM Subscripts
+% 3) <IgnoreMask>: Mask for Ignore points for the sorted GM subscripts
+% IgnoreMask==0 (Ignore Points) IgnoreMask==1 (Valid GM start poin
 
 
 %% .......................... Boundary Extraction .......................
 se = strel('sphere',1);
 %this finds start points on the source edge inside the greymatter
-edgesWG = imdilate(seg==1,se) & seg==2;
+edgesWG = imdilate(seg==2,se) & seg==1;
 %this finds start points on the forground edge
 edgesGB = imdilate(seg==3,se) & seg==1;
 % requires a bit of a hack, will need to remove ignore points after sorting 
@@ -88,7 +91,8 @@ ImgIgnore=edgesG-edgesGB;
 
 [IgnorePts(:,1),IgnorePts(:,2)]=find(ImgIgnore==1);
 szIgnore=size(IgnorePts);
-
+szTotal=size(GBSorted);
+IgnoreMask=ones(szTotal(1),1);
 for i=1:szIgnore
     %Find the row and column point to ignore
     row=IgnorePts(i,1);
@@ -99,8 +103,10 @@ for i=1:szIgnore
     index=find(temp==1);
     
     %Delete index
-    GBSorted(index,:)=[];
+    %GBSorted(index,:)=nan;
     
+    %instead of deleting points make a mask incase information is needed
+    IgnoreMask(index)=0;
     
 end
 
