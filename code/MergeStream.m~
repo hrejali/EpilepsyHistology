@@ -29,59 +29,62 @@ edgesIgnore = (imdilate(seg==4,se) & seg==1);
 
 %% ....................... Sort Boundary Points ..........................
 [GMStartpts, ~,IgnoreMask]=SortSeedSub(seg); % sorts the boundary subscripts
-
+GMStartpts(:,[1 2])=GMStartpts(:,[2 1]); %Note orders are swaped from streamline orders
 %% ................... Reverse Order for Streamline ......................
 sz1=size(streams1);
 
 for i=1:sz1(2)
-    temp=streams{1,i}';
+    temp=streams1{1,i}';
     temp=fliplr(temp)'; % flip the order
-    streams{1,i}=temp;
+    streams1{1,i}=temp;
     
 end
 
 
-%%
-%Note to delete cell must use () instead {} 
-i=1;
-while(~isempty(streams1) && ~isempty(streams2))
-    s1=streams1{1};s2=streams2{1};% always pick the first stream
-    row1=round(s1(1,2));col1=round(s1(1,1)); % note orders are swaped from order of startpts
-    row2=round(s2(1,2));col2=round(s2(1,1));
-    row1
+%% ......................... MERGE DATA ..................................
+%Note to delete cell must use () instead {}
+index=1;% keeps track of the index of new list
+szGM=size(GMStartpts);
 
+for i=1:szGM(1)-1
+    s1=streams1{1};% always pick the first stream
+    deleteIndex=[];% stores the index of streams1 that should be deleted
     
-    if(~IgnoreMask(i))% Ignore Point, delete invalid streams        
+    
+    if( ~IgnoreMask(i) )% Ignore Point, delete invalid streams
         %check if 8-connected neighbourhood of initial stream point
         %correponds to ignore point
-        for dx=-1:1
-            for dy=-1:1
-                if( row1+dx==GBSorted(i,1) && col1+dy==GBSorted(i,2)  )
-                    streams1(1)=[]; %delete stream requires regular bracket to delete 
-                end
+        szStream1=size(streams1);
+        for j=1:szStream1(2)
+            s1=streams1{j};
+            if( Connectivity8(round(s1(1,:)),GMStartpts(i,:)) || Connectivity8(round(s1(2,:)),GMStartpts(i,:)))
+                deleteIndex=[deleteIndex,j];
             end
         end
+        streams1(deleteIndex)=[];
         
-    else %Valid Start Point, add points to new list
-        
-        if(streams(i))
-            
-        else
-            
+    elseif(~isempty(streams2)) %Valid Start Point, add points to new list
+        streams(index)=streams2(1);
+        streams2(1)=[];
+        index=index+1;
+        while( isRange( GMStartpts(i,:),GMStartpts(i+1,:),s1(1,:) ))
+            streams(index)=streams1(1);
+            streams1(1)=[];
+             s1=streams1{1};
+            index=index+1;
         end
+        try
+        streams(index)=streams2(1);
         
+        streams2(1)=[];
+        index=index+1;
     end
     
     
-    i=i+1;
 end
 
 
 
-while(~isempty(streams1))
-    
-end
-while(~isempty(streams2))
-    
-end
+
+
 end
