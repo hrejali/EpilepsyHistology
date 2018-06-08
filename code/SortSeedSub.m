@@ -39,7 +39,7 @@ se = strel('sphere',1);
 %Intersection of the 4 labels is assumed to be the starting point
 %This point corresponds to neighbouring ignore location (seg==4) in seg
 % Note because the Boundary is not closed we will produce 2 starting points
-StartPt = imdilate(seg==1,se) & imdilate(seg==2,se) & imdilate(seg==3,se) & seg==4;
+StartPt = imdilate(seg==1,se) & imdilate(seg==2,se) & seg==4;
 [Px,Py]=find(StartPt==1);
 
 % Start points of boundary is in the 8 neighbourhood of StartPt

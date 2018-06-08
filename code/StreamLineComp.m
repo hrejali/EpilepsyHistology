@@ -34,7 +34,7 @@ fg = find(HSeg_Im.img==1); % Grey Matter
 src = find(HSeg_Im.img==2);% White Matter
 snk = find(HSeg_Im.img==3);% Background
 %% ...............................LAPLACE SOLVER..........................
-numiter=5000;
+numiter=500;
 LPfield = laplace_solver(fg,src,snk,numiter,[],sz);
 LPfieldImage = HSeg_Im;
 LPfieldImage.img = zeros(sz);
@@ -65,6 +65,8 @@ edgesGB = imdilate(HSeg_Im.img==3,se) & HSeg_Im.img==1;
 %% ....................... SORT SEED POINTS ...............................
 seg=HSeg_Im.img(:,:,1);
 [GBSorted, WGSorted,IgnoreMask]=SortSeedSub(seg); % sorts the boundary subscripts
+GBSorted(:,[1 2])=GBSorted(:,[2 1]); % Columns needed to be swapped
+WGSorted(:,[1 2])=WGSorted(:,[2 1]); % Columns needed to be swapped
 
 %% .....................WM/GM Boundary Stream lines......................
 %converts start points to list of x y coordinates for WM/GM Boundary
@@ -72,7 +74,7 @@ seg=HSeg_Im.img(:,:,1);
 % Compute the gradient of the laplacian ImLap
 [dx,dy]=gradient(ImLap);
 %This returns a list of streamlines, which can be viewed with streamline()
-streams1 = stream2(dx,dy,WGSorted(:,2),WGSorted(:,1),[1 1000000]);
+streams1 = stream2(dx,dy,WGSorted(:,1),WGSorted(:,2),[1 1000]);
 %% ....................... GM Surface Stream lines.........................
 %converts start points to list of x y z coordinates for Background/GM Boundary
 %[startpts1,startpts2] = ind2sub(size(edgesGB),find(edgesGB(:,:,1)==1));
@@ -81,7 +83,7 @@ streams1 = stream2(dx,dy,WGSorted(:,2),WGSorted(:,1),[1 1000000]);
 %Delete all points that need to be ignored obtained from IgnoreMask 
 GBSorted(IgnoreMask==0,:)=[];
 %This returns a list of streamlines for GM Surface
-streams2 = stream2(-dx,-dy,GBSorted(:,2),GBSorted(:,1), [1 1000000]);
+streams2 = stream2(-dx,-dy,GBSorted(:,1),GBSorted(:,2), [1 1000]);
 %% ..................... Filter Streamline Points ......................
 sz1=size(streams1);
 sz2=size(streams2);
@@ -91,6 +93,9 @@ end
 for i=1:sz2(2)
     streams2(i)=StreamFilt(seg,streams2(i));
 end
+%% ................................. MERGE STREAMLINES ....................
+% Merges streamlines from WM and GM boundary using GM boundary start points
+MergedStreams=MergeStream(streams1,streams2,seg);
 %% .................................DISPLAY................................
 % Display Laplace image
 figure; hold on
@@ -101,8 +106,10 @@ s2=streamline(streams2);
 %% ........................SAVE STREAMLINES IN STRUCT.....................
 Output=struct;
 Output.hdr.Boundary{1}='GM/WM';Output.hdr.Boundary{2}='GM';
+Output.hdr.Boundary{3}='Merged';
 Output.hdr.ImageName=name;
-Output.data(1).Profile=streams1;Output.data(2).Profile=streams2;
+Output.data(1).Streams=streams1;Output.data(2).Streams=streams2;
+Output.data(3).Streams=MergedStreams;
 end
 
 
