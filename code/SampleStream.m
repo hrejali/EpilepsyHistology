@@ -35,10 +35,13 @@ if nargin < 2   % if the number of inputs equals smaller than 2 not enough input
     msg= 'Not enough inputs -- Required inputs: 1) Image to sample from 2) Streamline to sample the image ';
     error(msg);
 end
-
+%% ............. Check type of StreamLine (cell --> mat) ................
+if(iscell(Stream))
+    Stream=cell2mat(Stream);
+end
 %% .................Interpolate and Sample Intensities.....................
 % Note the flip in x an y, due flip in previous code StreamlineComp
-Profile=interp2(Img,Stream(:,2),Stream(:,1),Interp); 
+Profile=interp2(Img,Stream(:,1),Stream(:,2),Interp); 
 %% ..........Cortical Depth (%) Corresponding to each Sample...............
 len=size(Stream);
 StartPT=norm(Stream(1,:));

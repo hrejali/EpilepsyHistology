@@ -1,0 +1,32 @@
+function [delta1 delta2]=InterBoundaryDiff(stream1,stream2)
+%Name: Hossein Rejali
+%Supervisor: Dr. Ali Khan
+%Date: June 21st,2018
+%Title: Inter-Boundary Difference bewteen neighbouring streamlines
+%% ............................Description................................
+% InterBoundaryDif(stream1,stream2)
+% Determine the difference bewteen coordinates on neighbouring streamlines at the GM
+% boundary (delta1) and the difference bewteen the coordinates on
+% neighbouring streamlines at the WM boundary
+% Hypothesis: delta1/delta2 ratio can give you a measure of degree of 
+% curvature experienced by the streamlines
+
+%Inputs:
+% 1) <stream1>: streamline 1 which is neighbouring streamline to stream2
+% 2) <stream2>: streamline 2 which is neighbouring streamline to stream1
+
+% Assumtions that the streamlines are not cell but arrays!
+
+%Outputs:
+% 1) <delta1>: Euclidean distance bewteen coordinates at the GM boundary 
+% bewteen streamline 1 and streamline 2 
+% 2) <delta2>: Euclidean distance bewteen coordinates at the WM boundary 
+% bewteen streamline 1 and streamline 2 
+
+%%
+len1=length(stream1);
+len2=length(stream2);
+
+delt
+
+end

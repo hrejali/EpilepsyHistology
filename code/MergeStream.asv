@@ -62,7 +62,7 @@ for i=1:szGM(1)-1
         streams(index)=streams2(1);
         streams2(1)=[];
         index=index+1;
-        while( isRange( GMStartpts(i,:),GMStartpts(i+1,:),round(s1(1,:)) ) && ~isempty(streams1))
+        while( isRange( GMStartpts(i,:),GMStartpts(i+1,:),round(s1(1,:)) ) && ~)
             
             streams(index)=streams1(1);
             streams1(1)=[];
