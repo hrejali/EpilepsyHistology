@@ -5,7 +5,7 @@
 function [Fx, Fy,List]= ParameterizeStreamArea(Streams)
 %% ............................ Description ...............................
 % ParameterizeStream(Streams)
-% Parameterize streamline to F(#,PercentageDepth)
+% Parameterize streamline to F(#,Area)
 
 %Inputs:
 % 1) <Stream>: Merged Streamlines obtained from the correponding
