@@ -2,7 +2,7 @@
 %Supervisor: Dr. Ali Khan
 %Date: June 15th,2018
 %Title: Bin Profile
-function [binprofile]= BinProfile(img,Streams,numProfile2Bin)
+function [binprofile]= BinProfile(img,Stream,numProfile2Bin)
 %% ............................ Description ...............................
 % BinStream(Img,Streams,numStream2Bin)
 % Bins and averages specified number of profiles  
@@ -15,35 +15,11 @@ function [binprofile]= BinProfile(img,Streams,numProfile2Bin)
 
 %Outputs:
 % 1) <BinProfile>: List of Bin Profiles.
-%% ...................... Find Length of each Streamline .................
-NumStreams=length(Streams);
-lenStreams=zeros(NumStreams,1);
-CorticalDepth=struct;
-for i = 1:NumStreams
-    lenStreams(i)=length(Streams{i});
-    CorticalDepth(i).stream=CorticalDepthPer(Streams{i});
-end
-
-%% ..................... Scatter Interp Preparation .....................
-CorticalDepthVec=[];
-StreamNum=[];
-X=[];
-Y=[];
-for i = 1:NumStreams
-    s=Streams{i};
-    X=[X s(:,1)'];
-    Y=[Y s(:,2)'];
-    CorticalDepthVec=[CorticalDepthVec CorticalDepth(i).stream];
-    for j = 1:lenStreams(i)
-        temp(j)=i;
-    end
-    StreamNum=[StreamNum temp];
-    temp=[];
-end
-Fx=scatteredInterpolant(StreamNum',CorticalDepthVec',X','linear','none');
-Fy=scatteredInterpolant(StreamNum',CorticalDepthVec',Y','linear','none');
-%% .................... Sample Streamlines and Bin Them ..................
-Depth=0:1/100:1;
+%% ....... Reparameterize Streamlines by Cortical Depth Percentage .............
+NumStreams=length(Stream);
+[Fx,Fy]=ParameterizeStream(Stream); % Fx,y(streamline index, percentage depth [0 1])
+%%
+Depth=0:1/1000:1-1/1000;
 Maxlen=length(Depth);
 Corr=ones(Maxlen,2); Corr(:,2)=Depth;
 bin=NaN(Maxlen,numProfile2Bin);
@@ -56,7 +32,7 @@ for i = 0:NumStreams-numProfile2Bin-1
         bin(:,j) = SampleStream(img,[CorrX CorrY]);
         
     end
-    binprofile(:,i+1)=mean(bin','omitnan')';
+    %binprofile(:,i+1)=mean(bin','omitnan')';
 end
 
 end

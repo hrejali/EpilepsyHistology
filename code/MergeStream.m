@@ -2,7 +2,7 @@
 %Supervisor: Dr. Ali Khan
 %Date: May 27th,2018
 %Title: Merge list of streams based on the GM start points
-function [streams]= MergeStream(streams1,streams2,seg)
+function [Merge]= MergeStream(StreamWM,StreamGM,seg)
 %% ............................Description................................
 %MergeStream(streams1,streams2)
 % Merges streamline lists into 1 list based on the GM start points.:
@@ -21,18 +21,16 @@ function [streams]= MergeStream(streams1,streams2,seg)
 % 1) <streams>: Merged streams sorted based on the GM start points.
 
 %% ....................... Sort Boundary Points ..........................
-[GMStartpts, ~,IgnoreMask]=SortSeedSub(seg); % sorts the boundary subscripts
+[GMStartpts, ~,~]=SortSeedSub(seg); % sorts the boundary subscripts
 GMStartpts(:,[1 2])=GMStartpts(:,[2 1]); %Note orders are swaped from streamline orders
 %% ................... Reverse Order for Streamline ......................
-sz1=size(streams1);
-
+sz1=size(StreamWM);
 for i=1:sz1(2)
-    temp=streams1{1,i}';
+    temp=StreamWM{1,i}';
     temp=fliplr(temp)'; % flip the order
-    streams1{1,i}=temp;
+    StreamWM{1,i}=temp;
     
 end
-
 
 %% ......................... MERGE DATA ..................................
 %Note to delete cell must use () instead {}
@@ -40,46 +38,43 @@ index=1;% keeps track of the index of new list
 szGM=size(GMStartpts);
 
 for i=1:szGM(1)-1
-   if(~isempty(streams1)) 
-       s1=streams1{1};% always pick the first stream
+   if(~isempty(StreamWM)) 
+       WMStream=StreamWM{1};% always pick the first stream
    end
-%     deleteIndex=[];% stores the index of streams1 that should be deleted
-%     
-%     
-%     if( ~IgnoreMask(i) )% Ignore Point, delete invalid streams
-%         %check if 8-connected neighbourhood of initial stream point
-%         %correponds to ignore point
-%         szStream1=size(streams1);
-%         for j=1:szStream1(2)
-%             s1=streams1{j};
-%             if( Connectivity8(round(s1(1,:)),GMStartpts(i,:)) || Connectivity8(round(s1(2,:)),GMStartpts(i,:)))
-%                 deleteIndex=[deleteIndex,j];
+        
+    if(~isempty(StreamGM)) %Valid Start Point, add points to new list
+        Merge(index)=StreamGM(1); %#ok<*AGROW>
+        Shape=alphaShape([StreamGM{1}(:,1);StreamGM{2}(:,1)],[StreamGM{1}(:,2);StreamGM{2}(:,2)]);
+        StreamGM(1)=[];
+        index=index+1;
+        
+        while(Shape.inShape(WMStream(1,:)))
+            Merge(index)=StreamWM(1);
+            StreamWM(1)=[];
+            if(~isempty(StreamWM))
+                WMStream=StreamWM{1};
+                index=index+1;
+            end
+        end
+        % Add WM Streamlines while "startpoints" of streamlines are within
+        % range of neighbouring GM Startpints
+%         X=[GMStartpts(i,1) GMStartpts(i+1,1)];Xmax=max(X); Xmin=min(X);
+%         Y=[GMStartpts(i,2) GMStartpts(i+1,2)];Ymax=max(Y); Ymin=min(Y);
+%         while( isRange( GMStartpts(i,:),GMStartpts(i+1,:),round(WMStream(1,:)) ) && ~isempty(StreamWM) ...
+%                 && (WMStream(1,1)<=Xmax || WMStream(1,2)<=Ymax) && (WMStream(1,1)>=Xmin || WMStream(1,2)>=Ymin))
+%             Merge(index)=StreamWM(1);
+%             StreamWM(1)=[];
+%             if(~isempty(StreamWM))
+%                 WMStream=StreamWM{1};
+%                 index=index+1;
 %             end
 %         end
-%         streams1(deleteIndex)=[];
         
-    if(~isempty(streams2)) %Valid Start Point, add points to new list
-        streams(index)=streams2(1);
-        streams2(1)=[];
-        index=index+1;
-        while( isRange( GMStartpts(i,:),GMStartpts(i+1,:),round(s1(1,:)) ) && ~isempty(streams1))
-            
-            streams(index)=streams1(1);
-            streams1(1)=[];
-            if(~isempty(streams1))
-                s1=streams1{1};
-                index=index+1;
-
-            else
-                break;
-            end
-            
-            
-        end
+        
+        
     end
     
 end
-
 
 
 

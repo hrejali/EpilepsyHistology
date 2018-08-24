@@ -21,8 +21,8 @@ GBSorted(:,[1 2])=GBSorted(:,[2 1]); % Columns needed to be swapped
 WGSorted(:,[1 2])=WGSorted(:,[2 1]); % Columns needed to be swapped
 
 %% ..................... Produce Stream Lines .............................
-step_size = 0.5; % amount of sampling for streamline
-max_number_verticies = 2000; % max number of verticies
+step_size = 0.1; % amount of sampling for streamline
+max_number_verticies = 5000; % max number of verticies
 opt = [step_size max_number_verticies]; % options specification for stream2
 
 % .....................WM/GM Boundary Stream lines......................
@@ -31,33 +31,55 @@ opt = [step_size max_number_verticies]; % options specification for stream2
 % Compute the gradient of the laplacian ImLap
 [dx,dy]=gradient(LPfield);
 %This returns a list of streamlines, which can be viewed with streamline()
-streams1 = stream2(dx,dy,WGSorted(:,1),WGSorted(:,2),opt);
+StreamsWM = stream2(dx,dy,WGSorted(:,1),WGSorted(:,2),opt);
 
 % ....................... GM Surface Stream lines.........................
 %Delete all points that need to be ignored obtained from IgnoreMask 
 GBSorted(IgnoreMask==0,:) = [];
 %This returns a list of streamlines for GM Surface
-streams2 = stream2(-dx,-dy,GBSorted(:,1),GBSorted(:,2), opt);
+StreamsGM = stream2(-dx,-dy,GBSorted(:,1),GBSorted(:,2), opt);
 
-%% ..................... Filter Streamline Points ......................
-sz1=size(streams1);
-sz2=size(streams2);
+%% ................. Filter Streamline Points - Mask ......................
+% StreamFilt() will mask all the points for each individual streamline
+% such that there are no coordinates outside the GM region
+sz1=size(StreamsWM); sz2=size(StreamsGM);
 %loop through streamline's
 for i=1:sz1(2)
-    streams1(i)=StreamFilt(seg,streams1(i));
+    StreamsWM(i)=StreamFilt(seg,StreamsWM(i));
 end
+
 for i=1:sz2(2)
-    streams2(i)=StreamFilt(seg,streams2(i));
+    StreamsGM(i)=StreamFilt(seg,StreamsGM(i));
 end
 
 %% ................................. MERGE STREAMLINES ....................
 % Merges streamlines from WM and GM boundary using GM boundary start points
-MergedStreams=MergeStream(streams1,streams2,seg);
+MergedStreams=MergeStream(StreamsWM,StreamsGM,seg);
+
+%% .....................Filter Streamline - Length.......................
+% Filter the streamlines that fall below or above 3 std from the mean length
+sz=size(MergedStreams);
+lenMerged=ones(1,sz(2));
+for i=1:sz(2)
+    lenMerged(i)=length(MergedStreams{i});
+end
+
+MeanLen=mean(lenMerged);STDLen=std(lenMerged);
+
+index=zeros(1,sz(2));
+for i=1:sz(2)
+    if( lenMerged(i)<=(MeanLen-2.5*STDLen) )
+        index(i)=1;
+    else
+        index(i)=0;
+    end
+end
+MergedStreams(index==1)=[];
 
 %% ........................SAVE STREAMLINES IN STRUCT.....................
 Output=struct;
 Output.hdr.Boundary{1}='GM/WM';Output.hdr.Boundary{2}='GM';
 Output.hdr.Boundary{3}='Merged';
-Output.data(1).Streams=streams1;Output.data(2).Streams=streams2;
+Output.data(1).Streams=StreamsWM;Output.data(2).Streams=StreamsGM;
 Output.data(3).Streams=MergedStreams;
 end

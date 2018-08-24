@@ -29,6 +29,7 @@ for(i=1:len(1))
     vec=Stream(i,:); 
     x=vec(1);y=vec(2);
     if(Seg(round(y),round(x))==1)
+    %if(round(interp2(Seg,x,y,'linear'))==1)
         StreamFilt(i,:)=Stream(i,:);
 
     else
@@ -37,6 +38,14 @@ for(i=1:len(1))
         break;
     end
 end
+
+
+%% Filter points strictly extending outside the GM Region 
+[x,y]=find(Seg==1);
+GMShape=alphaShape(x,y);
+index=GMShape.inShape(StreamFilt(:,2),StreamFilt(:,1));
+StreamFilt=[StreamFilt(index,1),StreamFilt(index,2)];
+
 sz=size(StreamFilt);
 %convert back to cell
 StreamFilt=mat2cell(StreamFilt,sz(1),sz(2));
