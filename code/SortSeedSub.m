@@ -91,28 +91,5 @@ WGSize = sum(edgesWG(:)==1);
 [GBSorted] = bwtraceboundary(edgesGB,GMStart,dirGB,8,GBSize);
 [WGSorted] = bwtraceboundary(edgesWG,WMStart,dirWG,8,WGSize);
 
-% Find points in image that correspond to ingore points
-% ImgIgnore = edgesG-edgesGB;
-% 
-% [IgnorePts(:,1),IgnorePts(:,2)] = find(ImgIgnore==1);
-% szIgnore = size(IgnorePts);
-% szTotal = size(GBSorted);
-% IgnoreMask = ones(szTotal(1),1);
-% for i = 1:szIgnore
-%     %Find the row and column point to ignore
-%     row = IgnorePts(i,1);
-%     col = IgnorePts(i,2);
-%     
-%     %find the index which index occurs in the GBSorted variable
-%     temp = GBSorted(:,1)==row & GBSorted(:,2)==col;
-%     index = find(temp==1);
-%     
-%     %Delete index
-%     %GBSorted(index,:)=nan;
-%     
-%     %instead of deleting points make a mask incase information is needed
-%     IgnoreMask(index) = 0;
-%     
-% end
 IgnoreMask=[];
 end
