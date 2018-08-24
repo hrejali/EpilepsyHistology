@@ -8,16 +8,16 @@ function DispStreamLineList(Streamline,list)
 % Display the order the Streamline
 
 %Inputs:
-% 1) <Streamline>: Streamlines  
+% 1) <Streamline>: Streamlines
 
 %Outputs:
 % 1) Figure of streamlines with increasing order of streamline shown with
 % different color.
 %%
-sz=size(Streamline);
 s=streamline(Streamline);
-ColorMat=[1 1 0]; %yello
+ColorMat=[1 1 0]; %yellow
 for i=list
     s(i).Color=ColorMat;
 end
+
 end
