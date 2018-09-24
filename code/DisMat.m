@@ -38,7 +38,7 @@ for i=1:sz(1)
       A=(X(i,:)-X(j,:))';
       B=(X(i,:)-X(j,:));
       
-      Mat(i,j)=abs((1/C(1,2))*dot(A,B));
+      Mat(i,j)=(1/Cinv(1,2))*dot(A,B);
       
     end
 end

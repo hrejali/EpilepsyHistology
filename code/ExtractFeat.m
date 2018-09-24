@@ -2,7 +2,7 @@
 %Supervisor: Dr. Ali Khan
 %Date: August 29th,2018
 %Title: Extract Features
-function [X]=ExtractFeat(Profiles)
+function [ZsX,X]=ExtractFeat(Profiles)
 %% ............................ Description ...............................
 % ExtractFeat(Profiles)
 % Program will extract features that describe the shape of individual profiles. 
@@ -60,7 +60,7 @@ end
 
 %% ................ Calucluate the Z score for Each Feature .............
 for i=1:10
-    X(:,i)=zscore(X(:,i));
+    ZsX(:,i)=zscore(X(:,i));
 end
 
 
