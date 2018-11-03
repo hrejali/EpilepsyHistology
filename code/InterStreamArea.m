@@ -22,8 +22,8 @@ function [List]= InterStreamArea(Stream)
 
 %% ....... Reparameterize Streamlines by Cortical Depth Percentage ........
 NumStream=length(Stream);
-[Fx,Fy]=ParameterizeStream(Stream); % Fx,y(streamline index, percentage depth [0 1])
-
+[F,~]=ParameterizeStream(Stream); % Fx,y(streamline index, percentage depth [0 1])
+Fx=F.Fx; Fy=F.Fy;
 %% ......................... Area Calculation .............................
 stepsize=1/1000;
 List=struct;
@@ -56,9 +56,9 @@ for i=1:NumStream-1
         TotalArea(:,i)=TotalArea(:,i)/sum(Area(:,i));
         
 end
-%% Guassian Smoothing
-w = 40;
-sigma = 20;
+%% ....................... Guassian Smoothing ............................
+w = 100;
+sigma = 50;
 sz = w;    % length of gaussFilter vector
 x = linspace(-sz / 2, sz / 2, sz);
 gaussFilter = exp(-x .^ 2 / (2 * sigma ^ 2));
@@ -70,7 +70,7 @@ for i=1:1/stepsize+1
     temp=conv(TotalAreaPad(i,:),h,'same');
     TotalAreaFilt(i,:)=temp(w/2+1:length(temp)-w/2);
 end
-% store into Struct
+%% Store into Struct
 for i =1:NumStream-1
     List.Stream(i).Area=TotalAreaFilt(:,i);
 end

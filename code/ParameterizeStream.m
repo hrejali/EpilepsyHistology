@@ -2,7 +2,7 @@
 %Supervisor: Dr. Ali Khan
 %Date: June 15th,2018
 %Title: Resample Streamlines 
-function [Fx, Fy]= ParameterizeStream(Streams)
+function [F, FInv]= ParameterizeStream(Streams)
 %% ............................ Description ...............................
 % ParameterizeStream(Streams)
 % Parameterize streamline to F(#,PercentageDepth)
@@ -12,7 +12,8 @@ function [Fx, Fy]= ParameterizeStream(Streams)
 % cortical region in the Img image
 
 %Outputs:
-% 1) <BinProfile>: List of Bin Profiles.
+% 1) <Fx>: Streamline Index
+% 2) <Fy>: Scattered interpolant of cortical depth along streamline
 %% ...................... Find Length of each Streamline .................
 NumStreams=length(Streams);
 lenStreams=zeros(NumStreams,1);
@@ -40,5 +41,11 @@ for i = 1:NumStreams
 end
 Fx=scatteredInterpolant(StreamNum',CorticalDepthVec',X','linear','none');
 Fy=scatteredInterpolant(StreamNum',CorticalDepthVec',Y','linear','none');
+% Inverse scattered interpolant
+FNumInv=scatteredInterpolant(X',Y',StreamNum','nearest','none');
+FDepthInv=scatteredInterpolant(X',Y',CorticalDepthVec','linear','none');
+
+F.Fx=Fx;FInv.FNumInv=FNumInv;
+F.Fy=Fy;FInv.FDepthInv=FDepthInv;
 
 end

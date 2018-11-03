@@ -24,13 +24,15 @@ if nargin == 1   % if the number of inputs equals 1
 end
 
 %% ..................Import and Check Image Dim...........................
-SegImage = load_nii(Image_dir);
+SegImage = load_untouch_nii(Image_dir); % using untouch load because had problems with images re-orienting
 seg=SegImage.img;
 %if(ndims(seg)==2)
     % Making the 2D image a 3D image to allow the Laplace solver to run
     %seg(:,:,2) = seg;
 %end
-
+% kernal = strel('square',2);
+% GM=imdilate(seg==1,kernal);
+% seg(GM==1)=1;
 %% ........DEFINE FORGROUND SOURCE AND SINK (BOUNDARY COND SETUP)...........
 sz = size(seg);
 fg = find(seg == 1); % Grey Matter
@@ -39,7 +41,7 @@ snk = find(seg == 3);% Background
 init = zeros(size(fg))+0.5;
 
 %% ...............................LAPLACE SOLVER..........................
-numiter = 3000; % max finite difference iterations 
+numiter = 5000; % max finite difference iterations 
 LPfield = laplace_iters_mex(fg,src,snk,init,numiter,sz);
 %LPfield = laplace_solver(fg,src,snk,numiter,[],sz);
 
@@ -58,7 +60,7 @@ while(~strcmp(name,nameComp))%Extract Name of file from Image_dir
     
 end
 erase(name, '_Seg');
-save_nii(LPfieldImage,[Output_dir,'/',name,'_Laplacian.nii.gz']);
+%save_nii(LPfieldImage,[Output_dir,'/',name,'_Laplacian.nii.gz']);
 
 % ......................................................................
 %% ........................ Divide Image into Sub Image .................

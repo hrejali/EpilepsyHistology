@@ -34,44 +34,37 @@ end
 
 %% ......................... MERGE DATA ..................................
 %Note to delete cell must use () instead {}
+% Read First WM Streamline
+if(~isempty(StreamWM)) % Maybe Take this out of for loop and have it there
+    WMStream=StreamWM{1};% always pick the first stream
+end
 index=1;% keeps track of the index of new list
 szGM=size(GMStartpts);
-
 for i=1:szGM(1)-1
-   if(~isempty(StreamWM)) 
-       WMStream=StreamWM{1};% always pick the first stream
-   end
-        
+
+    %% Check for empty GM List and Append     
     if(~isempty(StreamGM)) %Valid Start Point, add points to new list
-        Merge(index)=StreamGM(1); %#ok<*AGROW>
-        Shape=alphaShape([StreamGM{1}(:,1);StreamGM{2}(:,1)],[StreamGM{1}(:,2);StreamGM{2}(:,2)]);
-        StreamGM(1)=[];
-        index=index+1;
         
-        while(Shape.inShape(WMStream(1,:)))
+        Merge(index)=StreamGM(1); %#ok<*AGROW>
+        index=index+1;
+        %% Create Bounding Box Bewteen GM Streamlines -- AlphaShape creates bounding area that envelops a set of 2-D points
+        Shape=alphaShape([StreamGM{1}(:,1);StreamGM{2}(:,1)],[StreamGM{1}(:,2);StreamGM{2}(:,2)]);
+        if(Shape.numRegions>1) % In case when Alpha shape produces more than 1 region (Alpha radius not big enough
+            Shape=alphaShape([StreamGM{1}(:,1);StreamGM{2}(:,1)],[StreamGM{1}(:,2);StreamGM{2}(:,2)],Shape.Alpha+Shape.Alpha*0.2);
+        end
+        StreamGM(1)=[];
+
+        %% While WM Streamlines bewteen GM Streamlines Append
+        while( (Shape.inShape(WMStream(1,:))) && ~isempty(StreamWM) )
             Merge(index)=StreamWM(1);
             StreamWM(1)=[];
+            % Update WMStream 
             if(~isempty(StreamWM))
                 WMStream=StreamWM{1};
                 index=index+1;
             end
         end
-        % Add WM Streamlines while "startpoints" of streamlines are within
-        % range of neighbouring GM Startpints
-%         X=[GMStartpts(i,1) GMStartpts(i+1,1)];Xmax=max(X); Xmin=min(X);
-%         Y=[GMStartpts(i,2) GMStartpts(i+1,2)];Ymax=max(Y); Ymin=min(Y);
-%         while( isRange( GMStartpts(i,:),GMStartpts(i+1,:),round(WMStream(1,:)) ) && ~isempty(StreamWM) ...
-%                 && (WMStream(1,1)<=Xmax || WMStream(1,2)<=Ymax) && (WMStream(1,1)>=Xmin || WMStream(1,2)>=Ymin))
-%             Merge(index)=StreamWM(1);
-%             StreamWM(1)=[];
-%             if(~isempty(StreamWM))
-%                 WMStream=StreamWM{1};
-%                 index=index+1;
-%             end
-%         end
-        
-        
-        
+
     end
     
 end

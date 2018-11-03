@@ -19,7 +19,7 @@ function [imgOut]=ConnectedCompCrop(img,hdr)
 % 2) <imgOut> Cropped image(s)
 %% Use Header To Crop Image into Connected Components
 imgOut=hdr;
-for i=hdr.NumFGComp
+for i=1:hdr.NumFGComp
     Ylim=hdr.Comp(i).Ylim;
     Xlim=hdr.Comp(i).Xlim;
     imgOut.Comp(i).img=imcrop(img,[Ylim(1) Xlim(1) (Ylim(2)-Ylim(1)) (Xlim(2)-Xlim(1))]);

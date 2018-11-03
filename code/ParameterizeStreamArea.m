@@ -2,7 +2,7 @@
 %Supervisor: Dr. Ali Khan
 %Date: June 15th,2018
 %Title: Resample Streamlines 
-function [Fx, Fy,List]= ParameterizeStreamArea(Streams)
+function [F, FInv,List]= ParameterizeStreamArea(Streams)
 %% ............................ Description ...............................
 % ParameterizeStream(Streams)
 % Parameterize streamline to F(#,Area)
@@ -33,5 +33,13 @@ for i = 1:NumStreams-1
 end
 Fx=scatteredInterpolant(StreamNum(:),Area(:),X(:),'linear','none');
 Fy=scatteredInterpolant(StreamNum(:),Area(:),Y(:),'linear','none');
+% Determine the Inverse interpolant
 
+Depth=0:List.StepSize:1;
+Depth=(ones(1/List.StepSize+1,NumStreams-1).*Depth'); % Areas were obtained at equally spaced Depths
+FArea=scatteredInterpolant(StreamNum(:),Depth(:),Area(:),'linear','none');
+
+F.Fx=Fx;
+F.Fy=Fy;
+FInv.FArea=FArea;
 end

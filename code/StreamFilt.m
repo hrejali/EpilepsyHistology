@@ -25,7 +25,7 @@ end
 len=size(Stream);
 %% ...............................Mask values.............................
 % Check if x y coordinates of the streamline fall outside of GM region
-for(i=1:len(1))
+for i=1:len(1)
     vec=Stream(i,:); 
     x=vec(1);y=vec(2);
     if(Seg(round(y),round(x))==1)
@@ -41,11 +41,11 @@ end
 
 
 %% Filter points strictly extending outside the GM Region 
-[x,y]=find(Seg==1);
-GMShape=alphaShape(x,y);
-index=GMShape.inShape(StreamFilt(:,2),StreamFilt(:,1));
-StreamFilt=[StreamFilt(index,1),StreamFilt(index,2)];
-
+% [x,y]=find(Seg==1);
+% GMShape=alphaShape(x,y);
+% index=GMShape.inShape(StreamFilt(:,2),StreamFilt(:,1));
+% StreamFilt=[StreamFilt(index,1),StreamFilt(index,2)];
+%% Covert Back to Cell
 sz=size(StreamFilt);
 %convert back to cell
 StreamFilt=mat2cell(StreamFilt,sz(1),sz(2));

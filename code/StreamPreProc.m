@@ -44,12 +44,12 @@ StreamsGM = stream2(-dx,-dy,GBSorted(:,1),GBSorted(:,2), opt);
 % such that there are no coordinates outside the GM region
 sz1=size(StreamsWM); sz2=size(StreamsGM);
 %loop through streamline's
-for i=1:sz1(2)
-    StreamsWM(i)=StreamFilt(seg,StreamsWM(i));
-end
 
 for i=1:sz2(2)
     StreamsGM(i)=StreamFilt(seg,StreamsGM(i));
+end
+for i=1:sz1(2)
+    StreamsWM(i)=StreamFiltWM(seg,StreamsWM(i));
 end
 
 %% ................................. MERGE STREAMLINES ....................
@@ -68,7 +68,7 @@ MeanLen=mean(lenMerged);STDLen=std(lenMerged);
 
 index=zeros(1,sz(2));
 for i=1:sz(2)
-    if( lenMerged(i)<=(MeanLen-2.5*STDLen) )
+    if( lenMerged(i)<=(MeanLen-2*STDLen)  )
         index(i)=1;
     else
         index(i)=0;

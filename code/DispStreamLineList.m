@@ -18,6 +18,7 @@ s=streamline(Streamline);
 ColorMat=[1 1 0]; %yellow
 for i=list
     s(i).Color=ColorMat;
+    s(i).LineWidth=3;
 end
 
 end
