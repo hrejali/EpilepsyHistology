@@ -1,4 +1,4 @@
-function [Profile, corticalPer]= SampleStream(Img,Stream,Interp)
+function [Profile, corticalPer] = SampleStream(Img,Stream,Interp)
 %Name: Hossein Rejali
 %Supervisor: Dr. Ali Khan
 %Date: May 16th,2018

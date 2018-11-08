@@ -42,8 +42,6 @@ AlignedProfile=Profiles;
 % ReferenceLoc-Using distance metric to determine the best or most similar profile
 % within set
 [~,Refloc,~,DisMat]=ReferenceLoc(AlignedProfile);
-%Refloc=216;
-%Refloc=450;
 Ref=AlignedProfile(:,Refloc);
 iter=1;
 while(1)

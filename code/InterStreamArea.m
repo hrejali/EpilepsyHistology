@@ -2,7 +2,7 @@
 %Supervisor: Dr. Ali Khan
 %Date: June 22nd,2018
 %Title: Bewteen Streamline Area
-function [List]= InterStreamArea(Stream)
+function [List, DepthInterpolant]= InterStreamArea(Stream)
 %% ............................ Description ...............................
 % InterStreamArea(Stream)
 % Calculate the area made bewteen neighbouring streamlines at (i,j)
@@ -19,16 +19,18 @@ function [List]= InterStreamArea(Stream)
 
 %Outputs:
 % 1) <List>: List of areas for all streamlines
+% 2) <DepthInterpolant>: Foward and inverse interpolant of cortical depth %
 
 %% ....... Reparameterize Streamlines by Cortical Depth Percentage ........
 NumStream=length(Stream);
-[F,~]=ParameterizeStream(Stream); % Fx,y(streamline index, percentage depth [0 1])
+[F,FInv]=ParameterizeStream(Stream); % Fx,y(streamline index, percentage depth [0 1])
+DepthInterpolant=struct;
+DepthInterpolant.F=F;DepthInterpolant.FInv=FInv;
 Fx=F.Fx; Fy=F.Fy;
 %% ......................... Area Calculation .............................
 stepsize=1/1000;
 List=struct;
 List.StepSize=stepsize;
-
 for i=1:NumStream-1
     index=1;
     List.Stream(i).X=[];List.Stream(i).Y=[];

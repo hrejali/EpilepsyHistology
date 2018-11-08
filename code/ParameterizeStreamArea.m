@@ -2,7 +2,7 @@
 %Supervisor: Dr. Ali Khan
 %Date: June 15th,2018
 %Title: Resample Streamlines 
-function [F, FInv,List]= ParameterizeStreamArea(Streams)
+function [AreaInterpolant,List,DepthInterpolant]= ParameterizeStreamArea(Streams)
 %% ............................ Description ...............................
 % ParameterizeStream(Streams)
 % Parameterize streamline to F(#,Area)
@@ -12,9 +12,9 @@ function [F, FInv,List]= ParameterizeStreamArea(Streams)
 % cortical region in the Img image
 
 %Outputs:
-% 1) <BinProfile>: List of Bin Profiles.
+% 1) <Profile>: List of Profiles.
 %% ...................... Find Length of each Streamline .................
-List=InterStreamArea(Streams);
+[List, DepthInterpolant]=InterStreamArea(Streams);
 
 %% ............ Scatter Interp Preparation And Computation ................
 Area=[];
@@ -42,4 +42,8 @@ FArea=scatteredInterpolant(StreamNum(:),Depth(:),Area(:),'linear','none');
 F.Fx=Fx;
 F.Fy=Fy;
 FInv.FArea=FArea;
+
+AreaInterpolant.F=F;
+AreaInterpolant.FInv=FInv;
+
 end
