@@ -47,7 +47,6 @@ iter=1;
 % ReferenceLoc-Using distance metric to determine the best or most similar profile
 % within set
 [globalParm,profileList]=getGlobalParm(subjList);
-Ref=globalParm(1);
 % [~,Refloc,~,DisMat]=ReferenceLoc(AlignedProfile);
 % Ref=AlignedProfile(:,Refloc);
 %% In Real Time Determine Reference and Peform Alignment
@@ -56,8 +55,8 @@ AlignedProfile=profileList;
 while(1)
     [~,PFeat]=ExtractFeat(Ref); % Calculate Features from Previous Reference
     %% Determine Optimal Warping using COW
-    [Warping,~,~]=cow(Ref',AlignedProfile',globalParm(2),globalParm(3));
-    
+    [Warping,~,~]=cow(globalParm(1)',AlignedProfile',globalParm(2),floor(1000/12));
+    %[Warping,~,~]=cow(Ref',AlignedProfile',299,32);
     %% Smooth Warping Path along profiles and Store Transformation 
     SmoothWarping=SmoothWarp(Warping,50,150);
     WarpingStruct(iter).Transforms=Warping; 
