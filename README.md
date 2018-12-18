@@ -6,7 +6,7 @@ subfolders. The repositroy contains laplace solver and few other tools used in t
 
 To run the call the function **StreamLineComp(SegmentedImageDir,OutputDir)**.
 Assumes that you've inputed a segmented nifti image and that its in the directory you've specified. Segmented image
-contains 3 componets **GM == 1, WM == 2, *Background ==3**, addtionally an ignore label **ignore==4** which is regions to 
+contains 3 componets **GM == 1, WM == 2, Background ==3**, addtionally an ignore label **ignore==4** which is regions to 
 ignore. The ignore label is required and must be placed at the end of the tissue - an example is shown in the image below. 
 
 The function takes in two parameters:
