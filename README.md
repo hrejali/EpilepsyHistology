@@ -1,6 +1,6 @@
 # EpilepsyHistology
 
-## StreamLine Computation--StreamLineComp.m (MATLAB)
+## StreamLine Computation--StreamLineComp.m
 This code was developed to create a tool for sampling the laminae of the cortex in histology. Must clone the following git repository: https://github.com/jordandekraker/HippUnfolding. Add path to all 
 subfolders. The repositroy contains laplace solver and few other tools used in the script
 
