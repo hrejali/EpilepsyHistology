@@ -1,4 +1,11 @@
-# EpilepsyHistology
+# EpilepsyHistology ( In Development )
+
+1) The purpose of the tools found in this repository is to provide a way to sample cortical laminae in 2D images (Histology) by creating a coordinate system for individual slides.
+
+2) Provide a tool that allows alignment of 1D profiles obtained from coordinate system - this helps reduce the inherent anatomical variability from one are of the cortex from another. 
+
+3) Develop tools that helps classify abnormal tissue found within the cortex **( anomoly detection )**. ( In Development )   
+
 
 ## StreamLine Computation--StreamLineComp.m
 This code was developed to create a tool for sampling the laminae of the cortex in histology. Must clone the following git repository: https://github.com/jordandekraker/HippUnfolding. Add path to all 
