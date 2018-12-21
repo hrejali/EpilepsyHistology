@@ -4,7 +4,7 @@
 
 2) Provide a tool that allows alignment of 1D profiles obtained from coordinate system - this helps reduce the inherent anatomical variability from one are of the cortex from another. 
 
-3) Develop tools that helps classify abnormal tissue found within the cortex **( anomoly detection )**. ( In Development )   
+3) Develop unsupervised tools that help classify abnormal tissue found within the cortex using **anomoly detection**. ( In Development )   
 
 
 ## StreamLine Computation--StreamLineComp.m
