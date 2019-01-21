@@ -46,7 +46,7 @@ try
     LPfield = laplace_iters_mex(fg, source, sink, init, numiter, sz);
 catch
     disp('mex of laplace_iters failed, using non-mex file instead (slower, but will produce the same results). Retry laplace_iters_mex.prj (using MATLAB Coder) for faster results.');
-    LPfield = laplace_iters(fg, source, sink, init, numiter, sz);
+    LPfield = laplace_iters(g, source, sink, init, numiter, sz);
 end
 %LPfield = laplace_solver(fg,src,snk,numiter,[],sz);
 
