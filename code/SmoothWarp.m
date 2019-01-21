@@ -6,7 +6,8 @@ gaussFilter = exp(-x .^ 2 / (2 * sigma ^ 2));
 gaussFilter = gaussFilter / sum (gaussFilter); % normalize
 h = gaussFilter;
 
-for i=1:7
+[~,NumSeg,~]=size(Warping);
+for i=1:NumSeg
     WarpingPad(:,i)=padarray(Warping(:,i,1)',[0,round(w/2)],'symmetric');
     temp=conv(WarpingPad(:,i),h,'same');
     WarpingSmoothed(i,:)=temp(w/2+1:length(temp)-w/2);

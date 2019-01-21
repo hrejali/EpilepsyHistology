@@ -2,7 +2,7 @@
 %Supervisor: Dr. Ali Khan
 %Date: August 2nd,2018
 %Title: Align Profile (Additional Correction)
-function [AlignedProfile,WarpingStruct,Refloc]=AlignProfile(subjList)
+function [AlignedProfile,WarpingStruct,Ref]=AlignProfile(subjList)
 %% ............................ Description ...............................
 % AlignProfile(Profiles)
 % Algoirithm will locally align profiles in order to minimize distortion
@@ -30,11 +30,10 @@ function [AlignedProfile,WarpingStruct,Refloc]=AlignProfile(subjList)
 
 % Pairwise(Reference):
 % Pairwise methods require a reference profile ( spectrum ) in which other profiles
-% are aligned with either one is created or selecres -- The virtual reference is obtained as the average profile of a set
+% are aligned with either one is created or selected -- The virtual reference is obtained as the average profile of a set
 
 % Criteria or Target Function:
-% Method used for correction uses FFT correction, this method significantly
-% speeds up computational time compared with other target functions
+% Method used for correction uses Person Correlation
 
 %Inputs:
 % 1) <Profile>: Entire Profile Set
@@ -46,8 +45,8 @@ iter=1;
 %% Determine Global Parameters
 % ReferenceLoc-Using distance metric to determine the best or most similar profile
 % within set
-[globalParm,profileList]=getGlobalParm(subjList);
-Ref=globalParm(1);
+[Ref,globalParm,profileList]=getGlobalParm(subjList);
+
 % [~,Refloc,~,DisMat]=ReferenceLoc(AlignedProfile);
 % Ref=AlignedProfile(:,Refloc);
 %% In Real Time Determine Reference and Peform Alignment
@@ -56,7 +55,7 @@ AlignedProfile=profileList;
 while(1)
     [~,PFeat]=ExtractFeat(Ref); % Calculate Features from Previous Reference
     %% Determine Optimal Warping using COW
-    [Warping,~,~]=cow(Ref',AlignedProfile',globalParm(2),globalParm(3));
+    [Warping,~,~]=cow(Ref',AlignedProfile',globalParm(1),globalParm(2));
     
     %% Smooth Warping Path along profiles and Store Transformation 
     SmoothWarping=SmoothWarp(Warping,50,150);
@@ -75,7 +74,21 @@ while(1)
         break;
     end
 end
+%% Reconstruct Data
+start=1;
+for i=1:length(subjList)
+    NumComp=subjList(i).hdr.NumFGComp;
+    for j=1:NumComp
+        [~,numProfiles]=size(subjList(i).Comp(j).Area.Profiles);
+        subjList(i).Comp(j).Aligned.Profiles=AlignedProfile(:,start:numProfiles+start-1);
+        for k=1:length(WarpingStruct)
+            subjList(i).Comp(j).Aligned.Transform(k).WarpMtrx=WarpingStruct(k).Transforms(start:numProfiles+start-1,:,:);
+            subjList(i).Comp(j).Aligned.Transform(k).SmoothWarpMtrx=WarpingStruct(k).SmoothTransforms(start:numProfiles+start-1,:,:);
+
+        end
+        start=start+numProfiles;
+
+    end
 end
 
-
-
+end

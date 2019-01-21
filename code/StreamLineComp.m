@@ -77,7 +77,7 @@ NumFGComp=Output.hdr.NumFGComp;
 for i=1:NumFGComp
    Streams=StreamPreProc(Output.Comp(i).img,Output.Comp(i).laplace);
    Output.Comp(i).Streams=Streams.data(3).Streams;
-   
+  
 end
 Output.hdr.slice=name;
 

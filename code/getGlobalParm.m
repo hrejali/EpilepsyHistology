@@ -2,7 +2,7 @@
 %Supervisor: Dr. Ali Khan
 %Date: November 12th,2018
 %Title: Get Global Parameters 
-function [globalParm,profileList] = getGlobalParm(subjList)
+function [globalRef,globalParm,profileList] = getGlobalParm(subjList)
 %% ............................Description................................
 % getGlobalParm()
 % Determines Reference and other global parameters 
@@ -11,10 +11,10 @@ function [globalParm,profileList] = getGlobalParm(subjList)
 % 1) <subjList>: List of outputs from multiple subjects  
 
 %Outputs:
+% 2) <globalRef>:  Global Reference
 % 1) <globalParm>: Global parameters for mutliple subjects
-%   - gobalParm(1)= Reference, 
-%   - globalParm(2) = Segment length,
-%   - globalParm(3) = slack
+%   - globalParm(1) = Segment length,
+%   - globalParm(2) = slack
 %% Concatenate Profile Area's across components and subjects/slides
 profileList=[];
 for i=1:length(subjList)
@@ -30,13 +30,16 @@ end
 [globalRef,~,~] = ReferenceLoc(profileList);
 
 %% Get Global Slack and Segment Length Parameters
-segmentMin=35;segmentMax=105;
-slackMin=5; slackMax=30;
-optim_pars=optim_cow(profileList',[segmentMin, segmentMax, slackMin, slackMax],[0 10 30 0.1],globalRef(:,1)');
+% Decided to choose slack and segments size through trial error will come
+% back automate the choice if I have time
 
+% segmentMin=35;segmentMax=105;
+% slackMin=5; slackMax=30;
+% optim_pars=optim_cow(profileList',[segmentMin, segmentMax, slackMin, slackMax],[0 10 30 0.1],globalRef(:,1)');
+
+optim_pars(1)=100;optim_pars(2)=20;
 %% Store Global Parameters
-globalParm(1)=globalRef;
 %Segment Length/Slack
-globalParm(2)=optim_pars(1);globalParm(3)=optim_pars(2);
+globalParm(1)=optim_pars(1);globalParm(2)=optim_pars(2);
 
 end
