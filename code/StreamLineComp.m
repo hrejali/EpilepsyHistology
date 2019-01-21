@@ -41,8 +41,13 @@ snk = find(seg == 3);% Background
 init = zeros(size(fg))+0.5;
 
 %% ...............................LAPLACE SOLVER..........................
-numiter = 5000; % max finite difference iterations 
-LPfield = laplace_iters_mex(fg,src,snk,init,numiter,sz);
+numiter = 5000; % max finite difference iterations
+try
+    LPfield = laplace_iters_mex(fg, source, sink, init, numiter, sz);
+catch
+    disp('mex of laplace_iters failed, using non-mex file instead (slower, but will produce the same results). Retry laplace_iters_mex.prj (using MATLAB Coder) for faster results.');
+    LPfield = laplace_iters(fg, source, sink, init, numiter, sz);
+end
 %LPfield = laplace_solver(fg,src,snk,numiter,[],sz);
 
 LPfield(src) = 0;
