@@ -87,13 +87,13 @@ save([Output_dir,'/',name,'.mat'],'-struct','Output');
 Output_dir=[Output_dir,'/images'];
 % save images
 if ~exist(Output_dir, 'dir')
-    mkdir(yourFolder)
+    mkdir(Output_dir)
 end
 for i=1:NumFGComp
     Fig=figure;
     imagesc(Output.Comp(i).img);
     DispStreamLineOrder(Output.Comp(i).Streams);
-    saveas(Fig,[Output_dir,'/',name,'_Comp',i,'.png'])
+    saveas(Fig,[Output_dir,'/',name,'_Comp',num2str(i),'.png'])
 end
 
 end
