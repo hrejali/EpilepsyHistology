@@ -30,6 +30,7 @@ Output=struct;
 for i=1:NumFGComp
     subimg=seg;
     subimg(listFGComp{i})=10;
+    subimg(subimg==1)=4;
     %determine x and y limits to crop image
     [x, y] = find(subimg==10);
     subimg(listFGComp{i})=1; % change back label to 1

@@ -81,6 +81,9 @@ for i=1:NumFGComp
 end
 Output.hdr.slice=name;
 
+%% ........................... Save Results ...............................
+save([Output_dir,'/',name,'.mat'],Output);
+
 end
 
 
