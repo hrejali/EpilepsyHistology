@@ -82,7 +82,7 @@ end
 Output.hdr.slice=name;
 
 %% ........................... Save Results ...............................
-save([Output_dir,'/',name,'.mat'],Output);
+save([Output_dir,'/',name,'.mat'],'-struct','Output');
 
 end
 
