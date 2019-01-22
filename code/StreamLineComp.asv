@@ -83,10 +83,9 @@ Output.hdr.slice=name;
 
 %% ........................... Save Results ...............................
 save([Output_dir,'/',name,'.mat'],'-struct','Output');
-
-Output_dir=[Output_dir,'/images'];
+Output_dir=[Output_dir,'/
 % save images
-if ~exist(Output_dir, 'dir')
+if ~exist(yourFolder, 'dir')
     mkdir(yourFolder)
 end
 for i=1:NumFGComp
