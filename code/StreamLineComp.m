@@ -75,9 +75,12 @@ NumFGComp=Output.hdr.NumFGComp;
 %% ............ Streamline Computation and PreProcessing Steps  ...........
 %Computation is done on each sub-image
 for i=1:NumFGComp
-    Streams=StreamPreProc(Output.Comp(i).img,Output.Comp(i).laplace);
-    Output.Comp(i).Streams=Streams.data(3).Streams;
-    
+    try
+        Streams=StreamPreProc(Output.Comp(i).img,Output.Comp(i).laplace);
+        Output.Comp(i).Streams=Streams.data(3).Streams;
+    catch
+        disp(['Error in computation of sub-image component ',num2str(i)])
+    end
 end
 Output.hdr.slice=name;
 

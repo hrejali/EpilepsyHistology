@@ -64,7 +64,6 @@ for x = -1:1
             % This Error usually occur as a result of bad segementation
             disp('ERROR in SortSeedPoint.m - Unable to fine GM and WM start point')
             disp('This Error usually occurs as a result of bad segmentation')
-            return
 
         end
 
