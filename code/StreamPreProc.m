@@ -49,7 +49,7 @@ for i=1:sz2(2)
     StreamsGM(i)=StreamFilt(seg,StreamsGM(i));
 end
 for i=1:sz1(2)
-    StreamsWM(i)=StreamFilt(seg,StreamsWM(i));
+    StreamsWM(i)=StreamFiltWM(seg,StreamsWM(i));
 end
 
 %% ................................. MERGE STREAMLINES ....................
