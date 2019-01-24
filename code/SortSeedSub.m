@@ -50,26 +50,34 @@ StartPtGM = imdilate(seg==4,se) & imdilate(seg==3,se) & seg==1;
 % Start points of boundary is in the 8 neighbourhood of StartPt
 for x = -1:1
     for y = -1:1
-        % First WM start Point
-        try
-            if(edgesWG( x+Px_W(1),y+Py_W(1) ))
-                WMStart=[x+Px_W(1) y+Py_W(1)];
-            end
-            
             % First GM start Point
             if(edgesGB( x+Px_G(1),y+Py_G(1) ))
                 GMStart=[x+Px_G(1) y+Py_G(1)];
             end
-        catch
-            % This Error usually occur as a result of bad segementation
-            disp('ERROR in SortSeedPoint.m - Unable to fine GM and WM start point')
-            disp('This Error usually occurs as a result of bad segmentation')
-            return
-
-        end
 
     end
 end
+
+% find the closest point from GMStart point
+Pw=[Px_W Py_W];
+for i = 1:length(Pw)
+    dist(i)=norm(Pw(i,:) - GMStart );
+end
+[~,index]=min(dist);
+
+
+for x = -1:1
+    for y = -1:1
+        if( edgesWG( x+Px_W(index),y+Py_W(index) ) )
+            WMStart = [x+Px_W(index) y+Py_W(index)];
+        end
+        
+    end
+end
+
+
+% 
+
 %% ............................Direction.............................
 % dictionary for interpertation for x,y in the for loop
 dirMatrix=["NW","N","NE";
