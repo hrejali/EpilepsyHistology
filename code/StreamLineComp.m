@@ -41,7 +41,7 @@ snk = find(seg == 3);% Background
 init = zeros(size(fg))+0.5;
 
 %% ...............................LAPLACE SOLVER..........................
-numiter = 5000; % max finite difference iterations
+numiter = 100000; % max finite difference iterations
 try
     LPfield = laplace_iters_mex(fg, src, snk, init, numiter, sz);
 catch

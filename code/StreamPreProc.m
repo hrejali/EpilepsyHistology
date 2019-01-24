@@ -22,7 +22,7 @@ WGSorted(:,[1 2])=WGSorted(:,[2 1]); % Columns needed to be swapped
 
 %% ..................... Produce Stream Lines .............................
 step_size = 0.1; % amount of sampling for streamline
-max_number_verticies = 5000; % max number of verticies
+max_number_verticies = 10000; % max number of verticies
 opt = [step_size max_number_verticies]; % options specification for stream2
 
 % .....................WM/GM Boundary Stream lines......................
@@ -68,7 +68,7 @@ MeanLen=mean(lenMerged);STDLen=std(lenMerged);
 
 index=zeros(1,sz(2));
 for i=1:sz(2)
-    if( lenMerged(i)<=(MeanLen-2*STDLen)  )
+    if( lenMerged(i)<=(MeanLen-3*STDLen)  )
         index(i)=1;
     else
         index(i)=0;
