@@ -55,7 +55,13 @@ for i=1:szGM(1)-1
         StreamGM(1)=[];
 
         %% While WM Streamlines bewteen GM Streamlines Append
-        while( (Shape.inShape(WMStream(1,:))) && ~isempty(StreamWM) )
+        % obtain point to check
+        pWM=WMStream(1,:); % obtain 1st point in streamline to check
+        if(length(WMStream)>5)
+            pWM=WMStream(5,:); % obtain 5th point in streamline to check
+        end
+        
+        while( (Shape.inShape(pWM)) && ~isempty(StreamWM) )
             Merge(index)=StreamWM(1);
             StreamWM(1)=[];
             % Update WMStream 
