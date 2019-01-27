@@ -15,13 +15,14 @@ function [Output]= ProfileProc(FeatureMap,Output)
 % 1) <Output>: struct containing profiles paramertized by depth and Area
 % and their foward and inverse interpolants.
 %% Crop Feature Maps
-FeatureMap=ConnectedCompCrop(FeatureMap.img,Output.hdr);
+FeatureMap=ConnectedCompCrop(FeatureMap,Output.hdr);
 %% Profile Extraction and Iso-Area Correction
 for i=1:Output.hdr.NumFGComp
     %% Smooth Feature Maps
     kernal=[1 1 1; 1 1 1; 1 1 1]*1/9;
-    FeatureMap_Smooth=conv2(FeatureMap.Comp(i).img,kernal,'same');
-    FeatureMap_Smooth=conv2(FeatureMap_Smooth,kernal,'same');
+    %FeatureMap_Smooth=conv2(FeatureMap.Comp(i).img,kernal,'same');
+    %FeatureMap_Smooth=conv2(FeatureMap_Smooth,kernal,'same');
+    FeatureMap_Smooth=FeatureMap.Comp(i).img;
     %% Profile Extraction + Iso-Area Correction
     temp=ProfileExtraction(FeatureMap_Smooth,Output.Comp(i).Streams,'linear');
     

@@ -44,12 +44,7 @@ end
 %% Filter points strictly extending outside the GM Region 
 % This last step is additional for White matter Streamline POITNS
 
-% Errode image before filtering to ensure proper merge
-se=[0 1 0; 1 1 1; 0 1 0];
-se=strel('arbitrary',se);
-eSeg=imerode(Seg==1,se);
-
-[x,y]=find(eSeg==1);
+[x,y]=find(Seg==1);
 GMShape=alphaShape(x,y);
 index=GMShape.inShape(StreamFilt(:,2),StreamFilt(:,1));
 StreamFilt=[StreamFilt(index,1),StreamFilt(index,2)];
