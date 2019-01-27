@@ -2,7 +2,7 @@
 %Supervisor: Dr. Ali Khan
 %Date: August 2nd,2018
 %Title: Align Profile (Additional Correction)
-function [AlignedProfile,WarpingStruct,Ref]=AlignProfile(subjList)
+function [AlignedProfile,WarpingStruct,Ref,subjList]=AlignProfile(subjList)
 %% ............................ Description ...............................
 % AlignProfile(Profiles)
 % Algoirithm will locally align profiles in order to minimize distortion
@@ -64,13 +64,14 @@ while(1)
     iter=iter+1; % Record number of iterations
     %% Apply Warping to Data Set & Determine New Reference
     AlignedProfile=cow_apply(AlignedProfile',SmoothWarping)';
+    prevRef=Ref;
     Ref=mean(AlignedProfile,2);
     
     %Determine Distance Bewteen New and Old Reference.
     [~,Feat]=ExtractFeat(Ref);
-    distFeat=norm(Feat-PFeat);
+    distFeat=norm(prevRef-Ref);
 
-    if(distFeat<0.05 || iter==10)
+    if(distFeat<0.1 || iter==10)
         break;
     end
 end
