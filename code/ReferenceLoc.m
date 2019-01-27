@@ -19,7 +19,6 @@ sz=size(Profiles);
 DisMat=zeros(sz(2),sz(2));
 for i=1:sz(2)
     for j=1:sz(2)
-        %DisMat(i,j)=dtw(Profiles(:,i),Profiles(:,j));
         DisMat(i,j)=sqrt(sum((Profiles(:,i) - Profiles(:,j)) .^ 2));
     end
 end

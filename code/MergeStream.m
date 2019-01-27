@@ -34,9 +34,15 @@ end
 
 %% ......................... MERGE DATA ..................................
 %Note to delete cell must use () instead {}
+%delete first 5 WM Streamlines - to ensure GM streamlines start first
+StreamWM(1:5)=[];
+
+% Errode Streamlines to ensure proper merge (HACK)
+StreamFiltWM=erodeStream(seg,StreamWM);
+
 % Read First WM Streamline
-if(~isempty(StreamWM)) % Maybe Take this out of for loop and have it there
-    WMStream=StreamWM{1};% always pick the first stream
+if(~isempty(StreamFiltWM)) % Maybe Take this out of for loop and have it there
+    WMStream=StreamFiltWM{1};% always pick the first stream
 end
 index=1;% keeps track of the index of new list
 szGM=size(GMStartpts);
@@ -55,13 +61,14 @@ for i=1:szGM(1)-1
         StreamGM(1)=[];
 
         %% While WM Streamlines bewteen GM Streamlines Append
-        
-        while( (Shape.inShape(WMStream(1,:))) && ~isempty(StreamWM) )
+        % Use StreamFiltWM to compare and StreamWM to Append to Merge
+        while( (Shape.inShape(WMStream(1,:))) && ~isempty(StreamFiltWM) )
             Merge(index)=StreamWM(1);
             StreamWM(1)=[];
+            StreamFiltWM(1)=[];
             % Update WMStream 
-            if(~isempty(StreamWM))
-                WMStream=StreamWM{1};
+            if(~isempty(StreamFiltWM))
+                WMStream=StreamFiltWM{1};
                 index=index+1;
             end
         end
