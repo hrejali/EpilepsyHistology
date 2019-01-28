@@ -77,7 +77,7 @@ NumFGComp=Output.hdr.NumFGComp;
 for i=1:NumFGComp
     try
         Streams=StreamPreProc(Output.Comp(i).img,Output.Comp(i).laplace);
-        Output.Comp(i).Streams=Streams.data(3).Streams;
+        Output.Comp(i).Streams=Streams.data(3).Streams; % 3rd index is the Merged Streamlines!
     catch
         disp(['Error in computation of sub-image component ',num2str(i)])
     end
