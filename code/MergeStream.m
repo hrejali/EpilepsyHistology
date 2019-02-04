@@ -59,6 +59,7 @@ for i=1:szGM(1)-1
         index=index+1;
         %% Create Bounding Box Bewteen GM Streamlines -- AlphaShape creates bounding area that envelops a set of 2-D points
         Shape=alphaShape([StreamGM{1}(:,1);StreamGM{2}(:,1)],[StreamGM{1}(:,2);StreamGM{2}(:,2)]);
+        Shape.Alpha = criticalAlpha(Shape,'one-region')+0.2; % gives a little leway to avoid holes in strip
         if(Shape.numRegions>1) % In case when Alpha shape produces more than 1 region (Alpha radius not big enough
             Shape=alphaShape([StreamGM{1}(:,1);StreamGM{2}(:,1)],[StreamGM{1}(:,2);StreamGM{2}(:,2)],Shape.Alpha+Shape.Alpha*0.2);
         end
