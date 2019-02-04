@@ -39,6 +39,10 @@ StreamWM(1:5)=[];
 
 % Errode Streamlines to ensure proper merge (HACK)
 StreamFiltWM=erodeStream(seg,StreamWM);
+% Delete any empty list in StreamLineFiltWM and corresponding indicies in
+% StreamWM
+StreamWM(cellfun(@isempty,StreamFiltWM))=[];
+StreamFiltWM(cellfun(@isempty,StreamFiltWM))=[];
 
 % Read First WM Streamline
 if(~isempty(StreamFiltWM)) % Maybe Take this out of for loop and have it there
