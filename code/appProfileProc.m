@@ -40,7 +40,7 @@ FeatureMap=load([dir,'/../',Res,'_FeatureMaps/',slide,'.mat']);
 %% ....................... Run ProfileProc ...............................
 index=strfind(cell2mat(FeatureMap.features),Feature);
 temp=FeatureMap.featureVec(:,:,index);
-temp=temp(:,end:-1:1)';
+%temp=temp(:,end:-1:1)';
 Output=ProfileProc(temp,Output);
 
 %% ......................... Save Results ...............................
