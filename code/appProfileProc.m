@@ -58,7 +58,7 @@ for i=1:NumFGComp
     Fig=figure;
     imagesc(Output.Comp(i).FeatureMap);
     DispStreamLineOrder(Output.Comp(i).Streams);
-    saveas(Fig,[out_dir,'/',name,'_Comp',num2str(i),'.png'])
+    saveas(Fig,[out_dir,'/',slide,'_Comp',num2str(i),'.png'])
 end
 
 % Save Profile images
@@ -68,7 +68,7 @@ for i=1:NumFGComp
     title('Original Profiles');
     subplot(2,1,2);imagesc(Output.Comp(i).Area.Profiles);
     title('Iso-Area Corrected Profiles');
-    saveas(Fig,[out_dir,'/',name,'_Profiles_Comp',num2str(i),'.png'])
+    saveas(Fig,[out_dir,'/',slide,'_Profiles_Comp',num2str(i),'.png'])
 end
 
 end
