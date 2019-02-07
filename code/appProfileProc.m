@@ -35,11 +35,12 @@ Output=load(in_dir);
 [dir,slide]=fileparts(in_dir);
 
 %load FeatureMaps
-FeatureMap=load([dir,'/../',Res,'_FeatureMaps/',slide,'.mat']);
+FeatureMap=load_untouch_nii([dir,'/../',Res,'_FeatureMaps/histspace/',Feature,'/',slide,'.nii.gz']);
 
 %% ....................... Run ProfileProc ...............................
-index=strfind(cell2mat(FeatureMap.features),Feature);
-temp=FeatureMap.featureVec(:,:,index);
+%index=strfind(cell2mat(FeatureMap.features),Feature);
+%temp=FeatureMap.featureVec(:,:,index);
+temp=FeatureMap.img;
 %temp=temp(:,end:-1:1)';
 Output=ProfileProc(temp,Output);
 
