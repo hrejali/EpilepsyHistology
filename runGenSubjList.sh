@@ -30,8 +30,15 @@ do
 		outDir=$data_dir/${res}_SubjList
 		echo OUTPUT DIRECTORY: $outDir
 
+		# check if directory does not exist!
+		if [ ! -e $outDir ]
+		then
+			mkdir $outDir
+		fi
+
 		# Run Matlab 
 		echo "addpath(genpath('$searchpath'));  $func_name('$slide','$outDir'); exit" | matlab -nosplash -nodesktop
 		echo ......................................... DONE ..............................................
 
+	done
 	done
