@@ -21,8 +21,7 @@ end
 
 %% Check Output folder Exist 
 
-if ~exist(out_dir, 'file')
-    mkdir([out_dir,'/subjList.mat'])
+if ~exist([out_dir,'/subjList.mat'], 'file')
     Index=1;
 else
     temp=load([out_dir,'/subjList.mat']);
