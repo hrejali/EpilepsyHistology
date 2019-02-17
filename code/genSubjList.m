@@ -35,5 +35,5 @@ for i = 1:lenSubj
         Index=Index+1;
     end
 end
-save([out_dir,'/subjList',num2str(index),'.mat'],'-struct','dataList');
+save([out_dir,'/subjList.mat'],'-struct','dataList');
 end
