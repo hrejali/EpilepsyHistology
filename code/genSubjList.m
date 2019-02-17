@@ -26,7 +26,7 @@ lenSubj=length(subjList);
 %% Load data and Save
 Index=1;
 for i = 1:lenSubj
-    subj_dir=[in_dir,'/',list(i),'/',res,'_Profiles'];
+    subj_dir=[in_dir,'/',subjList(i),'/',res,'_Profiles'];
     slideList=ls('EPI*');
     for j=length(slideList)
         data_dir=[subj_dir,'/',slideList(j)];
