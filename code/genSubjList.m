@@ -22,7 +22,7 @@ end
 
 %% Load Information from List_dir
 subjList=importdata(list_dir,'\n');
-lenSubj=length(list);
+lenSubj=length(subjList);
 %% Load data and Save
 Index=1;
 for i = 1:lenSubj
