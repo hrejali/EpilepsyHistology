@@ -26,10 +26,11 @@ lenSubj=length(subjList);
 %% Load data and Save
 Index=1;
 for i = 1:lenSubj
-    subj_dir=[in_dir,'/',subjList(i),'/',res,'_Profiles'];
-    slideList=ls('EPI*');
-    for j=length(slideList)
-        data_dir=[subj_dir,'/',slideList(j)];
+    subj_dir=[in_dir,'/',cell2mat(subjList(i)),'/',res,'_Profiles'];
+    slideList=ls([subj_dir,'/EPI*']);
+    numSlides=size(slideList);
+    for j=1:numSlides(1)
+        data_dir=[subj_dir,'/',slideList(j,:)];
         subjProfiles=load(data_dir);
         dataList(Index) = subjProfiles;
         Index=Index+1;
