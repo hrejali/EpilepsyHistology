@@ -37,5 +37,5 @@ for i = 1:lenSubj
         Index=Index+1;
     end
 end
-save([out_dir,'/subjList.mat'],'dataList');
+save([out_dir,'/subjList.mat'],'dataList','-v7.3');
 end
