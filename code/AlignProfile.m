@@ -25,8 +25,8 @@ function [AlignedProfile,WarpingStruct,Ref,subjList]=AlignProfile(subjList)
 %   Review: [3] https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3901265/
 
 % Correction Method:
-% Will correct or align profiles by shifting and compressing&stretching profiles
-% to a virtual reference.
+% Will correct or align profiles by compressing & stretching profiles
+% to a reference choosen from the data set and than a virtual reference.
 
 % Pairwise(Reference):
 % Pairwise methods require a reference profile ( spectrum ) in which other profiles
@@ -46,6 +46,7 @@ iter=1;
 % ReferenceLoc-Using distance metric to determine the best or most similar profile
 % within set
 [Ref,globalParm,profileList]=getGlobalParm(subjList);
+disp('..................Reference Chosen................................')
 
 % [~,Refloc,~,DisMat]=ReferenceLoc(AlignedProfile);
 % Ref=AlignedProfile(:,Refloc);
@@ -71,7 +72,7 @@ while(1)
     [~,Feat]=ExtractFeat(Ref);
     distFeat=norm(prevRef-Ref);
 
-    if(distFeat<0.1 || iter==10)
+    if(distFeat<0.1 || iter==5)
         break;
     end
 end
