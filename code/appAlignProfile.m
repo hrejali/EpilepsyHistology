@@ -12,8 +12,11 @@ function appAlignProfile(in_dir,out_dir)
 Res='100um_5umPad';
 
 %% ....... Load dataList and apply iterative alignment algorithm ......... 
+disp('.................Before Loadining Data..........................')
 load([in_dir,'/','subjList.mat']);
+disp('.................After Loadining Data...........................')
 [AlignedProfiles,~,~,dataList]=AlignProfile(dataList);
+disp('................. AlignProfile Ran ...........................')
 
 %% ........................... Store data ................................
 save([out_dir,'/',Res,'_Profiles','/AlignedProfiles','.mat'],'AlignedProfiles');
