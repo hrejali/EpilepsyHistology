@@ -2,7 +2,7 @@
 %Supervisor: Dr. Ali Khan
 %Date: Feb 14th,2018
 %Title: Apply Align Profiles
-function appAlignProfile(data_dir,out_dir)
+function appAlignProfile(in_dir,out_dir)
 %% ............................ Description ...............................
 % appAlignProfile(in_dir,out_dir)
 % Align Profiles to a global reference - this code is meant
@@ -12,7 +12,7 @@ function appAlignProfile(data_dir,out_dir)
 Res='100um_5umPad';
 
 %% ....... Load dataList and apply iterative alignment algorithm ......... 
-load([data_dir,'/',Res,'_SubjList/subjList.mat']);
+load([in_dir,'/','subjList.mat']);
 [AlignedProfiles,~,~,dataList]=AlignProfile(dataList);
 
 %% ........................... Store data ................................
