@@ -2,20 +2,23 @@
 %Supervisor: Dr. Ali Khan
 %Date: Feb 14th,2018
 %Title: Apply Align Profiles
-function appAlignProfile(in_dir,out_dir)
+function appAlignProfile(data_dir,out_dir)
 %% ............................ Description ...............................
 % appAlignProfile(in_dir,out_dir)
 % Align Profiles to a global reference - this code is meant
 % to medium bewteen runAlignProfile bash script and AlignProfile.m Matlab
 % code
-%% ....... Load dataList and apply iterative alignment algorithm ......... 
-load(in_dir);
-[AlignedProfiles,~,~,dataList]=AlignProfile(dataList);
+%% Initialize Defualt variables
 Res='100um_5umPad';
-save([out_dir,'/',Res,'_Profiles','/AlignedProfiles','.mat'],'AlignedProfiles');
-Fig=figure;
-imagesc(AlignedProfiles); saveas([out_dir,'/',Res,'_Profiles','/AlignedProfiles','.png']);
+
+%% ....... Load dataList and apply iterative alignment algorithm ......... 
+load([data_dir,'/',Res,'_SubjList/subjList.mat']);
+[AlignedProfiles,~,~,dataList]=AlignProfile(dataList);
+
 %% ........................... Store data ................................
+save([out_dir,'/',Res,'_Profiles','/AlignedProfiles','.mat'],'AlignedProfiles');
+Fig=figure;imagesc(AlignedProfiles); saveas(Fig,[out_dir,'/',Res,'_Profiles','/AlignedProfiles','.png']);
+
 NumSubj=length(dataList);
 for i=1:NumSubj
     %% Save subject data
