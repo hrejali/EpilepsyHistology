@@ -19,8 +19,12 @@ disp('.................After Loadining Data...........................')
 disp('................. AlignProfile Ran ...........................')
 
 %% ........................... Store data ................................
-save([out_dir,'/',Res,'_Profiles','/AlignedProfiles','.mat'],'AlignedProfiles');
-Fig=figure;imagesc(AlignedProfiles); saveas(Fig,[out_dir,'/',Res,'_Profiles','/AlignedProfiles','.png']);
+dir=[out_dir,'/',Res,'_Profiles'];
+if ~exist(dir, 'dir')
+    mkdir(dir)
+end
+save([dir,'/AlignedProfiles','.mat'],'AlignedProfiles');
+Fig=figure;imagesc(AlignedProfiles); saveas(Fig,[dir,'/AlignedProfiles','.png']);
 
 NumSubj=length(dataList);
 for i=1:NumSubj
@@ -28,8 +32,8 @@ for i=1:NumSubj
     subj=dataList(i).hdr.slice(1:8);
     dir=[out_dir,'/',subj,'/',Res,'_AlignedProfiles'];
     
-    if ~exist(out_dir, 'dir')
-        mkdir(out_dir)
+    if ~exist(dir, 'dir')
+        mkdir(dir)
     end
     slide=dataList(i).hdr.slice;
     Output=dataList(i);
@@ -40,8 +44,8 @@ for i=1:NumSubj
                 
         dir=[dir,'/images'];
         % save images
-        if ~exist(out_dir, 'dir')
-            mkdir(out_dir)
+        if ~exist(dir, 'dir')
+            mkdir(dir)
         end
         %% Save Profiles
         Fig=figure;
