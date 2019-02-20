@@ -28,7 +28,12 @@ if ~exist(dir, 'dir')
 end
 name=['AlignedProfiles_sig-',num2str(parm(1)),'_segLen-',num2str(parm(2)),'_slack-',num2str(parm(3))];
 save([dir,'/',name,'.mat'],'AlignedProfiles');
-Fig=figure;imagesc(AlignedProfiles); truesize(Fig,[600 5000]); saveas(Fig,[dir,'/',name,'.png']);
+Fig=figure;imagesc(AlignedProfiles); 
+try
+    truesize(Fig,[600 5000]); saveas(Fig,[dir,'/',name,'.png']);
+catch
+    saveas(Fig,[dir,'/',name,'.png']);
+end
 
 % NumSubj=length(dataList);
 % for i=1:NumSubj
