@@ -2,7 +2,7 @@
 %Supervisor: Dr. Ali Khan
 %Date: August 2nd,2018
 %Title: Align Profile (Additional Correction)
-function [AlignedProfile,WarpingStruct,Ref,subjList]=AlignProfile(subjList)
+function [AlignedProfile,WarpingStruct,Ref,subjList]=AlignProfile(subjList,parm)
 %% ............................ Description ...............................
 % AlignProfile(Profiles)
 % Algoirithm will locally align profiles in order to minimize distortion
@@ -56,10 +56,11 @@ AlignedProfile=profileList;
 while(1)
     [~,PFeat]=ExtractFeat(Ref); % Calculate Features from Previous Reference
     %% Determine Optimal Warping using COW
-    [Warping,~,~]=cow(Ref',AlignedProfile',globalParm(1),globalParm(2));
+    %[Warping,~,~]=cow(Ref',AlignedProfile',globalParm(1),globalParm(2));
+    [Warping,~,~]=cow(Ref',AlignedProfile',parm(2),parm(3));
     
     %% Smooth Warping Path along profiles and Store Transformation 
-    SmoothWarping=SmoothWarp(Warping,50,150);
+    SmoothWarping=SmoothWarp(Warping,parm(1),3*parm(1));
     WarpingStruct(iter).Transforms=Warping; 
     WarpingStruct(iter).SmoothTransforms=SmoothWarping;
     iter=iter+1; % Record number of iterations
