@@ -54,7 +54,7 @@ disp('..................Reference Chosen................................')
 %loop through every profile in blocks (#blocks=iters)
 AlignedProfile=profileList;
 while(1)
-    [~,PFeat]=ExtractFeat(Ref); % Calculate Features from Previous Reference
+    %[~,PFeat]=ExtractFeat(Ref); % Calculate Features from Previous Reference
     %% Determine Optimal Warping using COW
     %[Warping,~,~]=cow(Ref',AlignedProfile',globalParm(1),globalParm(2));
     [Warping,~,~]=cow(Ref',AlignedProfile',parm(2),parm(3));
@@ -70,7 +70,7 @@ while(1)
     Ref=mean(AlignedProfile,2);
     
     %Determine Distance Bewteen New and Old Reference.
-    [~,Feat]=ExtractFeat(Ref);
+    %[~,Feat]=ExtractFeat(Ref);
     distFeat=norm(prevRef-Ref);
 
     if(distFeat<0.1 || iter==5)
