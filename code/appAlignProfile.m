@@ -40,7 +40,8 @@ try
 catch
     saveas(Fig,[dir,'/',name,'.png']);
 end
-
+Fig=figure;AverageProfilePlot(AlignedProfiles); saveas(Fig,[dir,'/',name,'_AvgProfilePlot.png']);
+ 
 % NumSubj=length(dataList);
 % for i=1:NumSubj
 %     %% Save subject data
