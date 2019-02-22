@@ -1,5 +1,10 @@
 function [WarpingSmoothed]=SmoothWarp(Warping,sigma,w)
 
+% check if length is odd 
+if(mod(w,2)==1)
+    w=w+1;
+end
+
 sz = w;    % length of gaussFilter vector
 x = linspace(-sz / 2, sz / 2, sz);
 gaussFilter = exp(-x .^ 2 / (2 * sigma ^ 2));
