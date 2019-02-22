@@ -12,7 +12,8 @@ function appAlignProfile(in_dir,out_dir,parm)
 %parm(2) - Segment Length 
 %parm(3) - Slack
 %% Run Code only if condition is met
-if(parm(2)>parm(3))
+if(parm(2)<parm(3))
+	parm(1)+ parm(2) +parm(3)
     disp('Segment length must be greater than slack');
     return;
 end

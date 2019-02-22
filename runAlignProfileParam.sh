@@ -21,6 +21,5 @@ echo INPUT: $in_dir
 echo OUTPUT DIRECTORY: $data_dir
 
 # Run Matlab 
-echo "addpath(genpath('$searchpath'));  $func_name('$in_dir','$data_dir','[$sigma,$segmentLength,$slack]'); exit" | matlab -nosplash -nodesktop
+echo "addpath(genpath('$searchpath'));  $func_name('$in_dir','$data_dir',[$sigma,$segmentLength,$slack]); exit" | matlab -nosplash -nodesktop
 echo ......................................... DONE ..............................................
-

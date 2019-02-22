@@ -8,7 +8,7 @@ do
 	    do
 		    for segmentLength in 25 50 75 100 200 
 		    do
-			    echo "runAlignProfileParam.sh $sigma $slack $segmentLength" >> $joblist
+			    echo "./runAlignProfileParam.sh $sigma $slack $segmentLength" >> $joblist
 
 		    done
 	    done
