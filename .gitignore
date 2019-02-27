@@ -3,3 +3,6 @@ Output/
 Images/
 *.asv
 core.*
+*.txt
+jobs/
+subjects
