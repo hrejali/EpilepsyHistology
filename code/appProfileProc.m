@@ -45,10 +45,15 @@ temp=FeatureMap.img;
 Output=ProfileProc(temp,Output);
 
 %% ......................... Save Results ...............................
+% save data
+out_dir=[out_dir,'/',Feature];
+if ~exist([out_dir,'/',Feature], 'dir')
+    mkdir(out_dir)
+end
 save([out_dir,'/',slide,'.mat'],'-struct','Output');
 
-out_dir=[out_dir,'/images'];
 % save images
+out_dir=[out_dir,'/images'];
 if ~exist(out_dir, 'dir')
     mkdir(out_dir)
 end
