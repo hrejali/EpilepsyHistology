@@ -20,9 +20,9 @@ FeatureMap=ConnectedCompCrop(FeatureMap,Output.hdr);
 for i=1:Output.hdr.NumFGComp
     %% Smooth Feature Maps
     kernal=[1 1 1; 1 1 1; 1 1 1]*1/9;
-    %FeatureMap_Smooth=conv2(FeatureMap.Comp(i).img,kernal,'same');
-    %FeatureMap_Smooth=conv2(FeatureMap_Smooth,kernal,'same');
-    FeatureMap_Smooth=FeatureMap.Comp(i).img;
+    FeatureMap_Smooth=conv2(FeatureMap.Comp(i).img,kernal,'same');
+    FeatureMap_Smooth=conv2(FeatureMap_Smooth,kernal,'same');
+    %FeatureMap_Smooth=FeatureMap.Comp(i).img;
     %% Profile Extraction + Iso-Area Correction
     temp=ProfileExtraction(FeatureMap_Smooth,Output.Comp(i).Streams,'linear');
     
