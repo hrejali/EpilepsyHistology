@@ -16,8 +16,8 @@ in_dir=$data_dir/${res}_SubjList
 echo INPUT: $in_dir
 echo OUTPUT DIRECTORY: $data_dir
 
-
 # Run Matlab 
 echo "addpath(genpath('$searchpath'));  $func_name('$in_dir','$data_dir'); exit" | matlab -nosplash -nodesktop
+
 echo ......................................... DONE ..............................................
 
