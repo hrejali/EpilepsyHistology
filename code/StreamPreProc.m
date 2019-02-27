@@ -68,7 +68,7 @@ MeanLen=mean(lenMerged);STDLen=std(lenMerged);
 
 index=zeros(1,sz(2));
 for i=1:sz(2)
-    if( lenMerged(i)<=(MeanLen-3*STDLen)  )
+    if( lenMerged(i)<=(MeanLen-4*STDLen)  )
         index(i)=1;
     else
         index(i)=0;

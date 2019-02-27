@@ -8,8 +8,9 @@ then
 	exit 0
 fi
 
-func_name=ProfileProc
+func_name=appProfileProc
 res=100um
+resOut=100um_5umPad
 
 # Define required directories
 data_dir=~/EpilepsyQuantHistology/proc
@@ -27,7 +28,7 @@ do
 	for slide in $list
 	do
 		echo INPUT: $slide
-		outDir=$subj_dir/${res}_Profiles
+		outDir=$subj_dir/${resOut}_Profiles
 		echo OUTPUT DIRECTORY: $outDir
 
 		# check if directory does not exist!
