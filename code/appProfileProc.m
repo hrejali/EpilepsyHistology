@@ -27,7 +27,7 @@ if nargin==2 || isempty(Feature)
     Feature='count';
     
 end
-Res='100um_200umPad';
+Res='100um_5umPad';
 
 %% ............................Import Data................................
 % load Streamlines
