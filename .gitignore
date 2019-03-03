@@ -6,3 +6,4 @@ core.*
 *.txt
 jobs/
 subjects
+*.mat
