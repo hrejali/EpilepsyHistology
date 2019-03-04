@@ -79,7 +79,7 @@ while(1)
     %[~,Feat]=ExtractFeat(Ref);
     distFeat=norm(prevRef-Ref);
 
-    if(distFeat<0.1 || iter==5)
+    if(distFeat<0.1 || iter==4)
         break;
     end
 end

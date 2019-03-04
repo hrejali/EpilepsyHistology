@@ -53,15 +53,13 @@ for i=1:NumSubj
     slide=dataList(i).hdr.slice;
     Output=dataList(i);
     save([dir,'/',slide,'.mat'],'-struct','Output');
-    
+    % save images
+    if ~exist([dir,'/images'], 'dir')
+        mkdir([dir,'/images'])
+    end
     NumFGComp=dataList(i).hdr.NumFGComp;
     for j=1:NumFGComp
                 
-        dir=[dir,'/images'];
-        % save images
-        if ~exist(dir, 'dir')
-            mkdir(dir)
-        end
         %% Save Profiles
         Fig=figure;
         subplot(3,1,1);imagesc(dataList(i).Comp(j).Depth.Profiles);
@@ -70,7 +68,7 @@ for i=1:NumSubj
         title('Iso-Area Corrected Profiles');
         subplot(3,1,3);imagesc(dataList(i).Comp(j).Aligned.Profiles);
         title('Iso-Area + Iterative Warped Profiles');
-        saveas(Fig,[dir,'/',slide,'_Profiles_Comp',num2str(i),'.png']);
+        saveas(Fig,[dir,'/images/',slide,'_Profiles_Comp',num2str(i),'.png']);
     end
 end
 disp('............... Code Sucessfully Ran Without Error ................')
