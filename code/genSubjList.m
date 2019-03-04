@@ -30,7 +30,6 @@ for i = 1:lenSubj
     slideList=dir([subj_dir,'/EPI*']);
     numSlides=size(slideList);
     for j=1:numSlides(1)
-        %data_dir=[subj_dir,'/',slideList(j,:)];
         data_dir=[slideList(j).folder,'/',slideList(j).name];
         subjProfiles=load(data_dir);
         dataList(Index) = subjProfiles;
