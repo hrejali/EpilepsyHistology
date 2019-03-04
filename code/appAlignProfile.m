@@ -39,8 +39,8 @@ try
 catch
     saveas(Fig,[dir,'/',name,'.png']);
 end
-Fig=figure;AverageProfilePlot(AlignedProfiles); saveas(Fig,[dir,'/',name,'_AvgProfilePlot.png']);
- 
+Fig=figure;AverageProfilePlot(AlignedProfiles); saveas(Fig,[dir,'/',name,'_AvgProfilePlot.png']);close(Fig);
+
 NumSubj=length(dataList);
 for i=1:NumSubj
     %% Save subject data
@@ -68,7 +68,8 @@ for i=1:NumSubj
         title('Iso-Area Corrected Profiles');
         subplot(3,1,3);imagesc(dataList(i).Comp(j).Aligned.Profiles);
         title('Iso-Area + Iterative Warped Profiles');
-        saveas(Fig,[dir,'/images/',slide,'_Profiles_Comp',num2str(i),'.png']);
+        saveas(Fig,[dir,'/images/',slide,'_Profiles_Comp',num2str(j),'.png']);
+        close(Fig);
     end
 end
 disp('............... Code Sucessfully Ran Without Error ................')
