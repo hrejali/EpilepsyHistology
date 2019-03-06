@@ -44,5 +44,9 @@ for i = 1:lenSubj
         Index=Index+1;
     end
 end
-save([out_dir,'/subjList.mat'],'dataList','-v7.3');
+
+if ~exist([out_dir,'/',Feature], 'dir')
+    mkdir([out_dir,'/',Feature])
+end
+save([out_dir,'/',Feature,'/subjList.mat'],'dataList','-v7.3');
 end
