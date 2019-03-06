@@ -2,7 +2,7 @@
 %Supervisor: Dr. Ali Khan
 %Date: Feb 14th,2018
 %Title: Generate Subject List
-function [subjList]= genSubjList(in_dir,list_dir,out_dir)
+function [subjList]= genSubjList(in_dir,list_dir,out_dir,Feature)
 %% ............................ Description ...............................
 % genSubjList(in_dir)
 % Generates list of subjects (data) in strucutre to be later processed
@@ -19,15 +19,23 @@ res='100um_5umPad';
 if nargin==2 || isempty(out_dir)
     out_dir = './List'; % set output directory to the current directory
 end
-
+if isempty(Feature)
+    Feature='count';
+end
+% check type of feature map
+if(strcmp(Feature,'count'))
+    profileFolder=[res,'_Profiles'];
+else
+    profileFolder=[res,'_AlignedProfiles/',Feature];
+end
 %% Load Information from List_dir
 subjList=importdata(list_dir,'\n');
 lenSubj=length(subjList);
 %% Load data and Save
 Index=1;
 for i = 1:lenSubj
-    subj_dir=[in_dir,'/',cell2mat(subjList(i)),'/',res,'_Profiles'];
-    slideList=dir([subj_dir,'/EPI*']);
+    subj_dir=[in_dir,'/',cell2mat(subjList(i)),'/',profileFolder];
+    slideList=dir([subj_dir,'/EPI*.mat']);
     numSlides=size(slideList);
     for j=1:numSlides(1)
         data_dir=[slideList(j).folder,'/',slideList(j).name];
