@@ -2,7 +2,7 @@
 %Supervisor: Dr. Ali Khan
 %Date: Feb 14th,2018
 %Title: Generate Subject List
-function [subjList]= genSubjList(in_dir,list_dir,out_dir,Feature)
+function [dataList]= genSubjList(in_dir,list_dir,out_dir,Feature)
 %% ............................ Description ...............................
 % genSubjList(in_dir)
 % Generates list of subjects (data) in strucutre to be later processed
@@ -49,4 +49,14 @@ if ~exist([out_dir,'/',Feature], 'dir')
     mkdir([out_dir,'/',Feature])
 end
 save([out_dir,'/',Feature,'/subjList.mat'],'dataList','-v7.3');
+%% Save Concatenated Profiles
+% if the feature map is not count save concatenated Profiles
+if(~strcmp(Feature,'count'))
+ 
+    out_dir=[in_dir,'/',res,'_Profiles']
+    if ~exist([out_dir,'/',Feature], 'dir')
+        mkdir([out_dir,'/',Feature])
+    end
+    concatenateProfiles(dataList,2,[out_dir,'/',Feature])
+end
 end
