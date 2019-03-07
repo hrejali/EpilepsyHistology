@@ -53,10 +53,12 @@ save([out_dir,'/',Feature,'/subjList.mat'],'dataList','-v7.3');
 % if the feature map is not count save concatenated Profiles
 if(~strcmp(Feature,'count'))
  
-    out_dir=[in_dir,'/',res,'_Profiles']
+    out_dir=[in_dir,'/',res,'_Profiles'];
     if ~exist([out_dir,'/',Feature], 'dir')
         mkdir([out_dir,'/',Feature])
     end
-    concatenateProfiles(dataList,2,[out_dir,'/',Feature])
+    % added an extra layer in the struct - Removing that extra layer;
+    subjList=dataList.Data(1:length(dataList));
+    concatenateProfiles(subjList,2,[out_dir,'/',Feature])
 end
 end
