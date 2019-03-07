@@ -19,9 +19,9 @@ function [profileList] = concatenateProfiles(subjList,dataTypeChoice,out_dir)
 %% Initialization and Input Check
 profileList=[];
 if nargin == 1 || isempty(dataTypeChoice) || dataTypeChoice==1
-    dataType="area";
+    dataType='area';
 elseif(dataTypeChoice==2)
-    dataType="Aligned";
+    dataType='Aligned';
 else
     fprintf("Invalid Input")
     return
