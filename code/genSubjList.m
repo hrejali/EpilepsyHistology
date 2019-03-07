@@ -58,7 +58,7 @@ if(~strcmp(Feature,'count'))
         mkdir([out_dir,'/',Feature])
     end
     % added an extra layer in the struct - Removing that extra layer;
-    subjList(1:length(dataList))=dataList.Data;
-    concatenateProfiles(subjList,2,[out_dir,'/',Feature])
+    List(1:length(dataList))=dataList.Data;
+    concatenateProfiles(List,2,[out_dir,'/',Feature])
 end
 end
