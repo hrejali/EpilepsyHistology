@@ -1,9 +1,27 @@
-function [k]= getCurvature(Comp)
+%Name: Hossein Rejali
+%Supervisor: Dr. Ali Khan
+%Date: March 11th,2019
+%Title: Get Curvature @ 50% cortical depth
+function [k]= getCurvature(Comp,Depth)
+%% ............................Description................................
+% getCurvature(Comp)
+% Gets curvature @ 50% cortical depth
+
+%Inputs:
+% 1) <Comp>: Individual Component Structure contains ( Depth, and FeatureMap )
+% 2) <Depth>: Depth percentage at which curvature is obtain - bewteen (0,1)
+
+%Outputs:
+% 2) <k>:  Curvature at along curve produce at specified depth
+%% ................ Set Default Values and Check Inputs .................. 
+if nargin==1 ||isempty(Depth)
+    Depth=0.5;
+end
 %% ............Obtain Coordinates at 50% depth of cortex...................
 X=[];Y=[];
 for i=1:length(Comp(1).Streams)
-    X=[X Comp(1).Depth.F.Fx(i,0.5)];
-    Y=[Y Comp(1).Depth.F.Fy(i,0.5)];
+    X=[X Comp(1).Depth.F.Fx(i,Depth)];
+    Y=[Y Comp(1).Depth.F.Fy(i,Depth)];
 end
 
 % Noisy Coordinates require smoothing 
@@ -11,6 +29,7 @@ Xs = smooth(X,50);
 Ys = smooth(Y,50);
 
 %% ..........................Calculate Curvature..........................
+% Formula: k = (x'*y'' - y'x'')/(x'^2 +y'^2)^3/2
 dx = gradient(Xs);
 ddx = gradient(dx);
 dy = gradient(Ys);
