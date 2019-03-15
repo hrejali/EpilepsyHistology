@@ -2,7 +2,7 @@
 %Supervisor: Dr. Ali Khan
 %Date: March 11th,2019
 %Title: Get Curvature @ 50% cortical depth
-function [k]= getCurvature(Comp,Depth)
+function [k,fig]= getCurvature(Comp,Depth)
 %% ............................Description................................
 % getCurvature(Comp)
 % Gets curvature @ 50% cortical depth
@@ -57,7 +57,7 @@ sgn=sign(cross(V1,V2));
 k=curvatur*sgn(3);
 
 %% plot
-figure; scatter(Xs,Ys,[],k);
+fig=figure; scatter(Xs,Ys,[],k);
 figure;plot(k);
-
+k=k';
 end
