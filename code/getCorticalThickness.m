@@ -19,6 +19,8 @@ function [Thickness]= getCorticalThickness(Streamlines)
 for i=1:numStream
 Thickness(i)=Pathlength(cell2mat(Streamlines(i)));
 end
+%% Smooth Cortical Thickness 
+Thickness=smooth(Thickness,80)';
 
 
 end
