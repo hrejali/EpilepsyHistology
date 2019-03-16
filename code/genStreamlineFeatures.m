@@ -43,14 +43,15 @@ for i = 1:lenSubj
             slide.Comp(k).Thick=Thickness;
             ThicknessList=[ThicknessList Thickness];
             
+            [Path,slideName,ext]=fileparts(data_dir);
             % Save updated structure.
-            save([data_dir,'2.mat'],'-struct','slide');
+            save([Path,slideName,'2',ext],'-struct','slide');
             
             % Save Images
-            saveas(figCurvature,[data_dir,'/images/',slideList(j).name,'_Curvature_Comp',num2str(k),'.png']);
+            saveas(figCurvature,[Path,'/images/',slideName,'_Curvature_Comp',num2str(k),'.png']);
             close(figCurvature);
             
-            saveas(figTickness,[data_dir,'/images/',slideList(j).name,'_Thickness_Comp',num2str(k),'.png']);
+            saveas(figTickness,[Path,'/images/',slideName,'_Thickness_Comp',num2str(k),'.png']);
             close(figTickness);
         end
 
@@ -60,6 +61,8 @@ end
 if ~exist([out_dir,'/StreamLineFeatures'], 'dir')
     mkdir([out_dir,'/StreamLineFeatures'])
 end
-save([out_dir,'/StreamLineFeatures/List.mat'],'dataList','-v7.3');
+save([out_dir,'/StreamLineFeatures/ThicknessList.mat'],'ThicknessList','-v7.3');
+save([out_dir,'/StreamLineFeatures/CurvatureList.mat'],'CurvatureList','-v7.3');
+
 
 end
