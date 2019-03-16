@@ -39,7 +39,7 @@ for i = 1:lenSubj
             
             % Thickness
             Thickness=getCorticalThickness(slide.Comp(k).Streams);
-            [figTickness]=DispStreamlineThickness(Comp);
+            [figTickness]=DispStreamlineThickness(slide.Comp(k));
             slide.Comp(k).Thick=Thickness;
             ThicknessList=[ThicknessList Thickness];
             
