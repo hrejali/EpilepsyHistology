@@ -62,6 +62,7 @@ if(~strcmp(Feature,'count'))
 %     for i=1:length(dataList)
 %         List(i)=dataList(i).Data;
 %     end
-    concatenateProfiles(List,Feature,[out_dir,'/'])
+%
+    concatenateProfiles(dataList,Feature,[out_dir,'/'])
 end
 end
