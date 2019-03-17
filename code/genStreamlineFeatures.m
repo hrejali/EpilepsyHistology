@@ -2,7 +2,7 @@
 %Supervisor: Dr. Ali Khan
 %Date: March 15th,2018
 %Title: Generate Streamline Features
-function [dataList]= genStreamlineFeatures(in_dir,list_dir,out_dir)
+function [CurvatureList,ThicknessList]= genStreamlineFeatures(in_dir,list_dir,out_dir)
 %% ............................ Description ...............................
 % genStreamlineFeatures(in_dir,list_dir,out_dir)
 % Generates Streamline specific Features (Curvature, Cortical Thickness)
@@ -34,18 +34,20 @@ for i = 1:lenSubj
         for k=1:numComp
             % Curvature
             [Curvature,figCurvature]=getCurvature(slide.Comp(k));
+            Curvature=Curvature(1,1:end-1); % this is to match size of aligned profiles
             slide.Comp(k).Curv=Curvature;
             CurvatureList=[CurvatureList Curvature];
             
             % Thickness
             Thickness=getCorticalThickness(slide.Comp(k).Streams);
+            Thickness=Thickness(1,1:end-1); % this is to match size of aligned profiles
             [figTickness]=DispStreamlineThickness(slide.Comp(k));
             slide.Comp(k).Thick=Thickness;
             ThicknessList=[ThicknessList Thickness];
             
             [Path,slideName,ext]=fileparts(data_dir);
             % Save updated structure.
-            save([Path,slideName,'2',ext],'-struct','slide');
+            save([Path,'/',slideName,'2',ext],'-struct','slide');
             
             % Save Images
             saveas(figCurvature,[Path,'/images/',slideName,'_Curvature_Comp',num2str(k),'.png']);
