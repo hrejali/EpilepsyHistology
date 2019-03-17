@@ -25,7 +25,7 @@ CurvatureList=[];ThicknessList=[];
 for i = 1:lenSubj
     subj_dir=[in_dir,'/',cell2mat(subjList(i))];
     
-    slideList=dir([subj_dir,'/',profileFolder,'/EPI*.mat']);
+    slideList=dir([subj_dir,'/',profileFolder,'/EPI*N.mat']);
     numSlides=size(slideList);
     for j=1:numSlides(1)
         data_dir=[slideList(j).folder,'/',slideList(j).name];
