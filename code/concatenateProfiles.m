@@ -2,7 +2,7 @@
 %Supervisor: Dr. Ali Khan
 %Date: March 6th,2019
 %Title: Concatenate Profiles
-function [profileList] = concatenateProfiles(subjList,dataTypeChoice,out_dir)
+function [profileList] = concatenateProfiles(subjList,dataType,out_dir)
 %% ............................Description................................
 % concatenateProfiles(subjList)
 % links subject profiles together in series
@@ -18,14 +18,7 @@ function [profileList] = concatenateProfiles(subjList,dataTypeChoice,out_dir)
 
 %% Initialization and Input Check
 profileList=[];
-if nargin == 1 || isempty(dataTypeChoice) || dataTypeChoice==1
-    dataType='area';
-elseif(dataTypeChoice==2)
-    dataType='Aligned';
-else
-    fprintf("Invalid Input")
-    return
-end
+
 %% Concatenate Profile across components and subjects/slides
 for i=1:length(subjList)
     

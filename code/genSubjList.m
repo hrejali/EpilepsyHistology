@@ -26,7 +26,8 @@ end
 if(strcmp(Feature,'count'))
     profileFolder=[res,'_Profiles'];
 else
-    profileFolder=[res,'_AlignedProfiles/',Feature];
+    %%profileFolder=[res,'_AlignedProfiles/',Feature];
+    profileFolder=[res,'_AlignedProfiles'];
 end
 %% Load Information from List_dir
 subjList=importdata(list_dir,'\n');
@@ -58,9 +59,9 @@ if(~strcmp(Feature,'count'))
         mkdir([out_dir,'/',Feature])
     end
     % added an extra layer in the struct - Removing that extra layer;
-    for i=1:length(dataList)
-        List(i)=dataList(i).Data;
-    end
-    concatenateProfiles(List,2,[out_dir,'/',Feature])
+%     for i=1:length(dataList)
+%         List(i)=dataList(i).Data;
+%     end
+    concatenateProfiles(List,Feature,[out_dir,'/'])
 end
 end
