@@ -24,7 +24,9 @@ for i=1:length(subjList)
     
     NumComp=subjList(i).hdr.NumFGComp;
     for j=1:NumComp
-        profileList=[profileList subjList(i).Comp(j).(dataType).Profiles];
+        temp=subjList(i).Comp(j).(dataType).Profiles;
+        temp=temp(:,1:end-1);
+        profileList=[profileList temp];
     end
 end
 %% Save Data
