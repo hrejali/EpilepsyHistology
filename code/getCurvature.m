@@ -40,8 +40,8 @@ denom=denom.^(2/3);
 curvatur = num ./ denom;
 
 %% .................... Outlier Removal and smoothing ....................
-curvatur(isoutlier(curvatur,'mean','ThresholdFactor',4)) = mean(curvatur);
-curvatur = smooth(curvatur,20);
+curvatur(isoutlier(curvatur,'mean','ThresholdFactor',3)) = mean(curvatur);
+curvatur = smooth(curvatur,80);
 %% .................Correct for sign of Curvature........................
 %Vector Pointing in direction from Pial to WM surface
 V1x=Comp(1).Depth.F.Fx(1,0)-Comp(1).Depth.F.Fx(1,1);
