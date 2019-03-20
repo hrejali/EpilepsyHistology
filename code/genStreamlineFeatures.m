@@ -47,7 +47,7 @@ for i = 1:lenSubj
             
             [Path,slideName,ext]=fileparts(data_dir);
             % Save updated structure.
-            save([Path,'/',slideName,'2',ext],'-struct','slide');
+            save([Path,'/',slideName,ext],'-struct','slide');
             
             % Save Images
             saveas(figCurvature,[Path,'/images/',slideName,'_Curvature_Comp',num2str(k),'.png']);
