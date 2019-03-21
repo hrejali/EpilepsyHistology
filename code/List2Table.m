@@ -22,7 +22,10 @@ function [T]=List2Table(ListDir,outDir)
 %       Profile#  (Scalar (1x1))
 %% ........................... Load In Data ..............................
 List1=load([ListDir,'/Depth/subjList.mat']);
+List1=List1.dataList;
+
 List2=load([ListDir,'/area/subjList.mat']);
+List2=List2.dataList;
 %% ............................Create Table................................
 
 VariableName={'Density','Area','Curvature','Thickness','Subject','Component','ProfileNumber'};
