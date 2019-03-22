@@ -41,11 +41,11 @@ for i=1:NumSubj
         for k=1:NumProfiles
             %Profile Features
             Density=List1(i).Comp(j).Aligned.Profiles(:,k)';
-            Area=List2(i).Comp(j).Aligned.Profiles(:,k)';
+            Area=List2(i).Data.Comp(j).Aligned.Profiles(:,k)';
             
             %Data Reduced Profile Features
             [~,DensityReduced]=ExtractFeat(List1(i).Comp(j).Aligned.Profiles(:,k));
-            [~,AreaReduced]=ExtractFeat(List2(i).Comp(j).Aligned.Profiles(:,k));
+            [~,AreaReduced]=ExtractFeat(List2(i).Data.Comp(j).Aligned.Profiles(:,k));
             
             %Streamline Features
             Curvature=List1(i).Comp(j).Curv(k);
