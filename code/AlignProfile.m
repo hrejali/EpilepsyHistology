@@ -57,12 +57,11 @@ while(1)
     %[~,PFeat]=ExtractFeat(Ref); % Calculate Features from Previous Reference
     %% Determine Optimal Warping using COW
     %[Warping,~,~]=cow(Ref',AlignedProfile',globalParm(1),globalParm(2));
-    [Warping,~,~]=cow(Ref',AlignedProfile',parm(2),parm(3));
+    [Warping,~,~]=cow(Ref',profileList',parm(2),parm(3));
     
     %% Smooth Warping Path along profiles and Store Transformation
     if(parm(1)==0)
         SmoothWarping=Warping;
-
     else
         SmoothWarping=SmoothWarp(Warping,parm(1),3*parm(1));
 
