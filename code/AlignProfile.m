@@ -71,12 +71,11 @@ while(1)
     WarpingStruct(iter).SmoothTransforms=SmoothWarping;
     iter=iter+1; % Record number of iterations
     %% Apply Warping to Data Set & Determine New Reference
-    AlignedProfile=cow_apply(AlignedProfile',SmoothWarping)';
+    AlignedProfile=cow_apply(profileList',SmoothWarping)';
     prevRef=Ref;
     Ref=mean(AlignedProfile,2);
     
     %Determine Distance Bewteen New and Old Reference.
-    %[~,Feat]=ExtractFeat(Ref);
     distFeat=norm(prevRef-Ref);
 
     if(distFeat<0.1 || iter==4)
