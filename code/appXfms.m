@@ -36,10 +36,16 @@ for i=1:NumFGComp
     NumXfms=length(Comp(i).Aligned.Transform);
     % Profiles to be aligned
     AlignedProfile=Data.Comp(i).Area.Profiles;
-    for j=1:NumXfms
-        Warping=Comp(i).Aligned.Transform(j).SmoothWarpMtrx;
-        AlignedProfile=cow_apply(AlignedProfile',Warping)';
-    end
+    
+%     for j=1:NumXfms
+%         Warping=Comp(i).Aligned.Transform(j).SmoothWarpMtrx;
+%         AlignedProfile=cow_apply(AlignedProfile',Warping)';
+%     end
+
+    % Only the last transformation applies!
+    Warping=Comp(i).Aligned.Transform(NumXfms).SmoothWarpMtrx;
+    AlignedProfile=cow_apply(AlignedProfile',Warping)';
+    
     Data.Comp(i).Aligned.Profiles=AlignedProfile;
     Data.Comp(i).Aligned.Transform=Comp(i).Aligned.Transform;
 end
