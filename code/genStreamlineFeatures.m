@@ -47,13 +47,13 @@ for i = 1:lenSubj
             
             [Path,slideName,ext]=fileparts(data_dir);
             % Save updated structure.
-            save([Path,'/',slideName,ext],'-struct','slide');
+            save([Path,'/count/',slideName,ext],'-struct','slide');
             
             % Save Images
-            saveas(figCurvature,[Path,'/images/',slideName,'_Curvature_Comp',num2str(k),'.png']);
+            saveas(figCurvature,[Path,'/count/images/',slideName,'_Curvature_Comp',num2str(k),'.png']);
             close(figCurvature);
             
-            saveas(figTickness,[Path,'/images/',slideName,'_Thickness_Comp',num2str(k),'.png']);
+            saveas(figTickness,[Path,'/count/images/',slideName,'_Thickness_Comp',num2str(k),'.png']);
             close(figTickness);
         end
 
