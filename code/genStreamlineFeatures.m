@@ -25,7 +25,7 @@ CurvatureList=[];ThicknessList=[];
 for i = 1:lenSubj
     subj_dir=[in_dir,'/',cell2mat(subjList(i))];
     
-    slideList=dir([subj_dir,'/',profileFolder,'/EPI*N.mat']);
+    slideList=dir([subj_dir,'/',profileFolder,'/count/EPI*N.mat']);
     numSlides=size(slideList);
     for j=1:numSlides(1)
         data_dir=[slideList(j).folder,'/',slideList(j).name];
@@ -47,13 +47,13 @@ for i = 1:lenSubj
             
             [Path,slideName,ext]=fileparts(data_dir);
             % Save updated structure.
-            save([Path,'/count/',slideName,ext],'-struct','slide');
+            save([Path,'/',slideName,ext],'-struct','slide');
             
             % Save Images
-            saveas(figCurvature,[Path,'/count/images/',slideName,'_Curvature_Comp',num2str(k),'.png']);
+            saveas(figCurvature,[Path,'/images/',slideName,'_Curvature_Comp',num2str(k),'.png']);
             close(figCurvature);
             
-            saveas(figTickness,[Path,'/count/images/',slideName,'_Thickness_Comp',num2str(k),'.png']);
+            saveas(figTickness,[Path,'/images/',slideName,'_Thickness_Comp',num2str(k),'.png']);
             close(figTickness);
         end
 
