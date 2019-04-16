@@ -13,22 +13,26 @@ function [T]=List2Table(ListDir,outDir)
 
 %Outputs:
 %1) <T> Table output with the following summarized information:
-%       Density   (Individual Profile(1x1000))
-%       Area      (Individual Profile(1x1000))
-%       Curvature (Scalar (1x1))
-%       Thickness (Scalar (1x1))
-%       Subject   (String)
-%       Component (Scalar (1x1))
-%       Profile#  (Scalar (1x1))
+%       Density      (Individual Profile(1x1000))
+%       Area         (Individual Profile(1x1000))
+%       Eccentricity (Individual Profile(1x1000))
+%       Curvature    (Scalar (1x1))
+%       Thickness    (Scalar (1x1))
+%       Subject      (String)
+%       Component    (Scalar (1x1))
+%       Profile#     (Scalar (1x1))
 %% ........................... Load In Data ..............................
-List1=load([ListDir,'/Depth/subjList.mat']);
+List1=load([ListDir,'/count/subjList.mat']);
 List1=List1.dataList;
 
 List2=load([ListDir,'/area/subjList.mat']);
 List2=List2.dataList;
+
+List3=load([ListDir,'/eccentricity/subjList.mat']);
+List3=List3.dataList;
 %% ............................Create Table................................
 
-VariableName={'Density','Area','Curvature','Thickness','Subject','Component','ProfileNumber'};
+VariableName={'Density','Area','Eccentricity','Curvature','Thickness','Subject','Component','ProfileNumber'};
 NumSubj=length(List1);
 T=[];TReduced=[];
 
@@ -42,10 +46,13 @@ for i=1:NumSubj
             %Profile Features
             Density=List1(i).Comp(j).Aligned.Profiles(:,k)';
             Area=List2(i).Data.Comp(j).Aligned.Profiles(:,k)';
+            Eccentricity=List3(i).Data.Comp(j).Aligned.Profiles(:,k)';
             
             %Data Reduced Profile Features
             [~,DensityReduced]=ExtractFeat(List1(i).Comp(j).Aligned.Profiles(:,k));
             [~,AreaReduced]=ExtractFeat(List2(i).Data.Comp(j).Aligned.Profiles(:,k));
+            [~,EccentricityReduced]=ExtractFeat(List3(i).Data.Comp(j).Aligned.Profiles(:,k));
+
             
             %Streamline Features
             Curvature=List1(i).Comp(j).Curv(k);
@@ -56,8 +63,8 @@ for i=1:NumSubj
             Component=j;
             ProfileNum=k;
                 
-            T=[T;table(Density,Area,Curvature,Thickness,string(Subject),Component,ProfileNum)];
-            TReduced=[TReduced;table(DensityReduced,AreaReduced,Curvature,Thickness,string(Subject),Component,ProfileNum)];
+            T=[T;table(Density,Area,Eccentricity,Curvature,Thickness,string(Subject),Component,ProfileNum)];
+            TReduced=[TReduced;table(DensityReduced,AreaReduced,EccentricityReduced,Curvature,Thickness,string(Subject),Component,ProfileNum)];
         end
         
     end
