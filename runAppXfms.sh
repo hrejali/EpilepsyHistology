@@ -34,13 +34,13 @@ module load matlab
 for subj in $@
 do
 	subj_dir=$data_dir/${subj}
-	list=$(ls -d $subj_dir/${res}_AlignedProfiles/EPI*)
+	list=$(ls -d $subj_dir/${res}_Profiles/count/EPI*)
 
 	# run through each subject
 	for slide in $list
 	do
 		echo INPUT: $slide
-		outDir=$subj_dir/${resOut}_AlignedProfiles/$Feature
+		outDir=$subj_dir/${res}_Profiles/$Feature
 		echo OUTPUT DIRECTORY: $outDir
 
 		# check if directory does not exist!
