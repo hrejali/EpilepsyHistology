@@ -23,12 +23,15 @@ if isempty(Feature)
     Feature='count';
 end
 % check type of feature map
-if(strcmp(Feature,'count'))
-    profileFolder=[res,'_Profiles/',Feature];
-else
-    profileFolder=[res,'_AlignedProfiles/',Feature];
-    %profileFolder=[res,'_AlignedProfiles'];
-end
+% if(strcmp(Feature,'count'))
+%     profileFolder=[res,'_Profiles/',Feature];
+% else
+%     profileFolder=[res,'_AlignedProfiles/',Feature];
+%     %profileFolder=[res,'_AlignedProfiles'];
+% end
+
+profileFolder=[res,'_Profiles/',Feature];
+
 %% Load Information from List_dir
 subjList=importdata(list_dir,'\n');
 lenSubj=length(subjList);

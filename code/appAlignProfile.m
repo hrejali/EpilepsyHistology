@@ -45,8 +45,11 @@ NumSubj=length(dataList);
 for i=1:NumSubj
     %% Save subject data
     subj=dataList(i).hdr.slice(1:8);
-    dir=[out_dir,'/',subj,'/',Res,'_AlignedProfiles'];
+    %dir=[out_dir,'/',subj,'/',Res,'_AlignedProfiles'];
     
+    %% Save the data all in one place!
+    dir=[out_dir,'/',subj,'/',Res,'_Profiles']; 
+    %%
     if ~exist(dir, 'dir')
         mkdir(dir)
     end
@@ -62,11 +65,13 @@ for i=1:NumSubj
                 
         %% Save Profiles
         Fig=figure;
-        subplot(3,1,1);imagesc(dataList(i).Comp(j).Depth.Profiles);
+        subplot(4,1,1);imagesc(dataList(i).Comp(j).Depth.Profiles);
         title('Original Profiles');
-        subplot(3,1,2);imagesc(dataList(i).Comp(j).Area.Profiles);
+        subplot(4,1,2);imagesc(dataList(i).Comp(j).Area.Profiles);
         title('Iso-Area Corrected Profiles');
-        subplot(3,1,3);imagesc(dataList(i).Comp(j).Aligned.Profiles);
+        subplot(4,1,2);imagesc(smoothProfile(dataList(i).Comp(j).Area.Profiles,30));
+        title('Smoothed Iso-Area Corrected Profiles');
+        subplot(4,1,4);imagesc(dataList(i).Comp(j).Aligned.Profiles);
         title('Iso-Area + Iterative Warped Profiles');
         saveas(Fig,[dir,'/images/',slide,'_Profiles_Comp',num2str(j),'.png']);
         close(Fig);

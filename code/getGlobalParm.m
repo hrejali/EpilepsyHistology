@@ -21,7 +21,9 @@ for i=1:length(subjList)
     
     NumComp=subjList(i).hdr.NumFGComp;
     for j=1:NumComp
-        profileList=[profileList subjList(i).Comp(j).Area.Profiles];
+        %Store Smoothed Data before 
+        PSmooth=smoothProfile(subjList(i).Comp(j).Area.Profiles,30);
+        profileList=[profileList PSmooth];
     end
 end
 %% Get Global Reference
