@@ -34,8 +34,9 @@ Data=load([dir,'/../',Res,'_Profiles/',Feature,'/',slice,ext]);
 NumFGComp=hdr.NumFGComp;
 for i=1:NumFGComp
     NumXfms=length(Comp(i).Aligned.Transform);
-    % Profiles to be aligned
-    AlignedProfile=Data.Comp(i).Area.Profiles;
+    
+    % Profiles to be aligned - We are smoothing the data here!
+    AlignedProfile=smoothProfile(Data.Comp(i).Area.Profiles,30);
     
 %     for j=1:NumXfms
 %         Warping=Comp(i).Aligned.Transform(j).SmoothWarpMtrx;
