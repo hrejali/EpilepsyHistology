@@ -49,6 +49,7 @@ for i=1:NumSubj
     
     %% Save the data all in one place!
     dir=[out_dir,'/',subj,'/',Res,'_Profiles']; 
+    
     %%
     if ~exist(dir, 'dir')
         mkdir(dir)
@@ -69,7 +70,7 @@ for i=1:NumSubj
         title('Original Profiles');
         subplot(4,1,2);imagesc(dataList(i).Comp(j).Area.Profiles);
         title('Iso-Area Corrected Profiles');
-        subplot(4,1,2);imagesc(smoothProfile(dataList(i).Comp(j).Area.Profiles,30));
+        subplot(4,1,3);imagesc(smoothProfile(dataList(i).Comp(j).Area.Profiles,10));
         title('Smoothed Iso-Area Corrected Profiles');
         subplot(4,1,4);imagesc(dataList(i).Comp(j).Aligned.Profiles);
         title('Iso-Area + Iterative Warped Profiles');
