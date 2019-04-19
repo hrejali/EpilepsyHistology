@@ -15,7 +15,7 @@ function [CurvatureList,ThicknessList]= genStreamlineFeatures(in_dir,list_dir,ou
 % 2) <out_dir>: Directory to save processed .mat files
 %% Initialize Variablessubj_dir
 res='100um_5umPad';
-profileFolder=[res,'_AlignedProfiles'];
+profileFolder=[res,'_Profiles'];
 
 %% Load Information from List_dir
 subjList=importdata(list_dir,'\n');

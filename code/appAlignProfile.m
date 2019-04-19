@@ -48,7 +48,7 @@ for i=1:NumSubj
     %dir=[out_dir,'/',subj,'/',Res,'_AlignedProfiles'];
     
     %% Save the data all in one place!
-    dir=[out_dir,'/',subj,'/',Res,'_Profiles']; 
+    dir=[out_dir,'/',subj,'/',Res,'_Profiles/count']; 
     
     %%
     if ~exist(dir, 'dir')
