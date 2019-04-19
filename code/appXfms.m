@@ -28,7 +28,7 @@ load(dir);
 
 %slice=alignedData.hdr.slice;
 % Load Data to be Aligned
-Data=load([dir,'/../',Res,'_Profiles/',Feature,'/',slice,ext]);
+Data=load([dir,'/../',Feature,'/',slice,ext]);
 
 %% Obtain Transformations and Apply to Data
 NumFGComp=hdr.NumFGComp;
