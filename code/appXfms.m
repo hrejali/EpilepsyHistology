@@ -50,13 +50,14 @@ for i=1:NumFGComp
     Data.Comp(i).Aligned.Profiles=AlignedProfile;
     Data.Comp(i).Aligned.Transform=Comp(i).Aligned.Transform;
 end
+
 %% Save Data
 dir=[dir,'/../',Feature];
 
 if ~exist(dir, 'dir')
     mkdir(dir)
 end
-save([dir,'/',slice,ext],'Data');
+save([dir,'/',slice,ext],'-struct','Data');
 
 %% Save images
 for i=1:NumFGComp
