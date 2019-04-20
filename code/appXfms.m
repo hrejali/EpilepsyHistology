@@ -56,7 +56,7 @@ dir=[dir,'/../',Feature];
 if ~exist(dir, 'dir')
     mkdir(dir)
 end
-save([dir,'/',slice,ext],'Data');
+save([dir,'/',slice,ext],'-struct','Data');
 
 %% Save images
 for i=1:NumFGComp
