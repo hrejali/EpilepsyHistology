@@ -66,8 +66,8 @@ for i=1:NumFGComp
     subplot(2,1,2);imagesc(Data.Comp(i).Aligned.Profiles);
     title('Corrected Profiles');
     
-    if ~exist(dir,'/images', 'dir')
-        mkdir(dir)
+    if ~exist([dir,'/images'], 'dir')
+        mkdir([dir,'/images'])
     end
     
     saveas(Fig,[dir,'/images/',slice,'_Profiles_Comp',num2str(i),'.png']);
