@@ -36,7 +36,7 @@ for i=1:NumFGComp
     NumXfms=length(Comp(i).Aligned.Transform);
     
     % Profiles to be aligned - We are smoothing the data here!
-    AlignedProfile=smoothProfile(Data.Comp(i).Area.Profiles,30);
+    AlignedProfile=smoothProfile(Data.Comp(i).Area.Profiles,10);
     
 %     for j=1:NumXfms
 %         Warping=Comp(i).Aligned.Transform(j).SmoothWarpMtrx;
@@ -55,7 +55,7 @@ dir=[dir,'/',Feature];
 if ~exist(dir, 'dir')
     mkdir(dir)
 end
-save([dir,'/',slice,ext],'Data');
+save([dir,'/../',Feature,'/',slice,ext],'Data');
 
 %% Save images
 for i=1:NumFGComp
@@ -64,7 +64,7 @@ for i=1:NumFGComp
     title('Original Profiles');
     subplot(2,1,2);imagesc(Data.Comp(i).Aligned.Profiles);
     title('Corrected Profiles');
-    saveas(Fig,[dir,'/',slice,'_Profiles_Comp',num2str(i),'.png']);
+    saveas(Fig,[dir,'/../',Feature,'/',slice,'_Profiles_Comp',num2str(i),'.png']);
 end
 
 end
