@@ -51,11 +51,12 @@ for i=1:NumFGComp
     Data.Comp(i).Aligned.Transform=Comp(i).Aligned.Transform;
 end
 %% Save Data
-dir=[dir,'/',Feature];
+dir=[dir,'/../',Feature];
+
 if ~exist(dir, 'dir')
     mkdir(dir)
 end
-save([dir,'/../',Feature,'/',slice,ext],'Data');
+save([dir,'/',slice,ext],'Data');
 
 %% Save images
 for i=1:NumFGComp
@@ -64,7 +65,7 @@ for i=1:NumFGComp
     title('Original Profiles');
     subplot(2,1,2);imagesc(Data.Comp(i).Aligned.Profiles);
     title('Corrected Profiles');
-    saveas(Fig,[dir,'/../',Feature,'/',slice,'_Profiles_Comp',num2str(i),'.png']);
+    saveas(Fig,[dir,'/',slice,'_Profiles_Comp',num2str(i),'.png']);
 end
 
 end
