@@ -50,6 +50,7 @@ for i=1:NumFGComp
     Data.Comp(i).Aligned.Profiles=AlignedProfile;
     Data.Comp(i).Aligned.Transform=Comp(i).Aligned.Transform;
 end
+
 %% Save Data
 dir=[dir,'/../',Feature];
 
