@@ -127,7 +127,7 @@ def getProfileShapeFeat(X):
     feat = np.zeros((sz[0],numFeat))
     
     for i in range(0,sz[0]):
-        Profile=X.iloc[i,:].values
+        Profile=smooth(X.iloc[i,:].values,101)
 
         # Mean
         f0=np.mean(Profile)

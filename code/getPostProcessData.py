@@ -6,10 +6,15 @@ import scipy as sp
 import seaborn as sns # plotting
 import sklearn as sk
 
+
 exec(open("./code/tools/ProcessingTools.py").read())
 exec(open("./code/tools/VisualizationTools.py").read())
 
-def getPostProcessData(fn='C:/Users/Hossein/Desktop/Table.csv',SmoothData=True,sigma=5,slideNorm=False,dimReduction=False):
+#exec(open("C:/Users/Hossein/Documents/MASc/Projects/EpilepsyHistology/code/tools/ProcessingTools.py").read())
+#exec(open("C:/Users/Hossein/Documents/MASc/Projects/EpilepsyHistology/code/tools/VisualizationTools.py").read())
+
+
+def getPostProcessData(fn,outDir='./',SmoothData=True,sigma=5,slideNorm=False,dimReduction=False):
     # Reading in the Data 
     Data=pd.read_csv(fn)
     Data=getCondenseSubjectList(Data)
@@ -32,7 +37,8 @@ def getPostProcessData(fn='C:/Users/Hossein/Desktop/Table.csv',SmoothData=True,s
         plt.imshow(X.iloc[0:5000,0:1000].transpose());plt.title("Smoothed Data Across Profiles")
         plt.subplot(2,1,2)
         plt.imshow(Data.iloc[0:5000,0:1000].transpose());plt.title("Original Data Across Profiles")
-        plt.show()
+        plt.savefig(outDir+'Profiles_Sigma-'+str(sigma)+'.png')
+        plt.close()
 
     else:
         print("No Within Slide Smoothing Applied")
@@ -47,7 +53,9 @@ def getPostProcessData(fn='C:/Users/Hossein/Desktop/Table.csv',SmoothData=True,s
         plt.imshow(X.iloc[0:5000,0:1000].transpose());plt.title("Normalized Data Across Profiles")
         plt.subplot(2,1,2)
         plt.imshow(Data.iloc[0:5000,0:1000].transpose());plt.title("Original Data Across Profiles")
-        plt.show()
+        plt.savefig(outDir+'Profiles_Normalized_Sigma-'+str(sigma)+'.png')
+
+        print("Within Slide Normalization Applied")
     else:
         print("No Within Slide Normalization Applied")
 
@@ -66,17 +74,17 @@ def getPostProcessData(fn='C:/Users/Hossein/Desktop/Table.csv',SmoothData=True,s
     # MacroFeatures (Curvature and Thickness)
     xMacroFeat=X.iloc[:,3000:3003]
 
-    XOut=pd.concat([xDensity,xArea,xEccentricity,xMacroFeat],axis=1)
+    Xreduced=pd.concat([xDensity,xArea,xEccentricity,xMacroFeat],axis=1)
     print("Profile Feature Extraction - Features Describe Profile Shape")
 
     ############################## Bewteen Subject Normalization #########################################
 
     # Normalize Data using Z-scores
-    cols = list(XOut.columns)
+    cols = list(Xreduced.columns)
     Xz=pd.DataFrame()
     for col in cols:
         col_zscore = col + '_zscore'
-        Xz[col_zscore] = (XOut[col] - XOut[col].mean())/XOut[col].std(ddof=0)
+        Xz[col_zscore] = (Xreduced[col] - Xreduced[col].mean())/Xreduced[col].std(ddof=0)
     Xz
     
     print("Bewteen Subject Normalization Applied")
@@ -104,6 +112,8 @@ def getPostProcessData(fn='C:/Users/Hossein/Desktop/Table.csv',SmoothData=True,s
             compList.append( name + str(compNum) )
         Xout.columns=compList
 
+        print("Diminesionality Reduction Applied")
+
     else:
         print("Diminesionality Reduction Not Applied")
 
@@ -111,4 +121,5 @@ def getPostProcessData(fn='C:/Users/Hossein/Desktop/Table.csv',SmoothData=True,s
     print("###########################################################################################")
     print(Data.head(n=5))
     print("###########################################################################################")
-    return Data,XOut, dataHdr
+    Data=pd.concat([X,dataHdr],axis=1)
+    return Data,Xout, dataHdr

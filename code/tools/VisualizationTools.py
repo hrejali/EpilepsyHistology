@@ -159,7 +159,7 @@ def Streamlineplot(mat,Data,subjNum,Comp,LabelMinMax):
     x = np.append(x,NaNStreams)
     y = np.append(y,NaNStreams)
      # ....................................................................................................
-    if(subjNum==1 & Comp==1):                    
+    if(subjNum==0 & Comp==0):                    
         sns.scatterplot(x=y,y=x,hue=labelList,legend='full',size=0.00001,
                         edgecolor='none',palette="Paired")
     else:
