@@ -53,7 +53,10 @@ def getPostProcessData(fn,outDir='./',SmoothData=True,sigma=5,slideNorm=False,di
         plt.imshow(X.iloc[0:5000,0:1000].transpose());plt.title("Normalized Data Across Profiles")
         plt.subplot(2,1,2)
         plt.imshow(Data.iloc[0:5000,0:1000].transpose());plt.title("Original Data Across Profiles")
-        plt.savefig(outDir+'Profiles_Normalized_Sigma-'+str(sigma)+'.png')
+        if(SmoothData):
+            plt.savefig(outDir+'Profiles_Normalized_Sigma-'+str(sigma) +'.png')
+        else:
+            plt.savefig(outDir+'Profiles_Normalized' +'.png')
 
         print("Within Slide Normalization Applied")
     else:
