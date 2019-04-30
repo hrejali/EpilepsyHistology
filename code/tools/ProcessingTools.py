@@ -83,13 +83,11 @@ def slideNormalization(Data,hdrData):
     for i in range(0,numSubj):
     
         slide=subjList[i]
-        temp=hdrData[hdrData['Subject']==slide]
 
         idx = Data[(hdrData['Subject'] == slide)].index
-        numCols=len(Data.columns)
-        temp=Data.iloc[idx,0:1000].values
+        temp=Data.iloc[idx,:].values
         # Z score Normalization
-        dataOut.iloc[idx,0:1000] = ( Data.iloc[idx,0:1000] - np.mean(temp.flatten()) )/( np.std(temp.flatten()) )
+        dataOut.iloc[idx,:] = ( Data.iloc[idx,:] - np.mean(temp.flatten()) )/( np.std(temp.flatten()) )
                      
     return dataOut
 

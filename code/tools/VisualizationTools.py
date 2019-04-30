@@ -38,10 +38,11 @@ def DispSubjectData(mat):
         
     plt.tight_layout()
 
-def DispSubjectDataStreamline(mat,Data):
+def DispSegmentation(mat,Data):
     ##################################################################################################################
     # Description:
-    # Creates a subplot of density featuremap images for each slide in addition overlays streamlines colored by the label. 
+    # Creates a subplot of featuremap images for each slide in addition overlays streamlines colored by the label.
+    # End Result is segmentation of labels overlayed ontop of Featuremaps found within mat file 
 
     #Inputs:
     # <mat>: h5py data containing list of subject data each containing Density Feature Maps and Streamlines
