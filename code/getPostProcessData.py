@@ -1,5 +1,7 @@
 # Importing libaries - Pandas used to read and manipulate data
 import pandas as pd
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy as sp
@@ -81,6 +83,7 @@ def getPostProcessData(fn,outDir='./',sigma=5,slideNorm=False,dimReduction=False
         plt.subplot(2,3,6)
         plt.imshow(X.iloc[0:5000,2000:3000].transpose())
         plt.savefig(outDir+'Profiles_Normalized_Sigma-'+ str(sigma) +'.png')
+        plt.close()
 
         print("Within Slide Normalization Applied")
     else:
