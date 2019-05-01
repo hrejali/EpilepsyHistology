@@ -16,4 +16,4 @@ cd $DIR/EpilepsyHistology
 pip3 install -r requirements.txt
 
 # Install neurobeer
-python3 setup.py install
+#python3 setup.py install
