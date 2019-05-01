@@ -1,4 +1,6 @@
 ############################################ VISUALIZATION AND PLOT FUNCTIONS ########################################
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import seaborn as sns # plotting
 import numpy as np
