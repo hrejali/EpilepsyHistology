@@ -6,18 +6,19 @@ import scipy as sp
 import seaborn as sns # plotting
 import sklearn as sk
 
+# Import in house made tools
+from tools import VisualizationTools as vis
+from tools import ProcessingTools as pt
+
 
 exec(open("./code/tools/ProcessingTools.py").read())
 exec(open("./code/tools/VisualizationTools.py").read())
 
-#exec(open("C:/Users/Hossein/Documents/MASc/Projects/EpilepsyHistology/code/tools/ProcessingTools.py").read())
-#exec(open("C:/Users/Hossein/Documents/MASc/Projects/EpilepsyHistology/code/tools/VisualizationTools.py").read())
 
-
-def getPostProcessData(fn,outDir='./',SmoothData=True,sigma=5,slideNorm=False,dimReduction=False):
+def getPostProcessData(fn,outDir='./',sigma=5,slideNorm=False,dimReduction=False):
     # Reading in the Data 
     Data=pd.read_csv(fn)
-    Data=getCondenseSubjectList(Data)
+    Data=vis.getCondenseSubjectList(Data)
 
     ## Header Data
     dataHdr=Data.iloc[:,-4:len(Data.columns)]
@@ -28,35 +29,58 @@ def getPostProcessData(fn,outDir='./',SmoothData=True,sigma=5,slideNorm=False,di
     X=Data.iloc[:,:-4]
 
     ############### Withing Slide Smoothing (OPTINAL - Data is already smoothed) ########################
-    if(SmoothData):
-        X.iloc[:,0:3000]=smoothSlideProfiles(X.iloc[:,0:3000],dataHdr,sigma)
 
-        # Plot to Viualize Results
-        plt.figure(figsize=[10,10])
-        ax=plt.subplot(2,1,1)
-        plt.imshow(X.iloc[0:5000,0:1000].transpose());plt.title("Smoothed Data Across Profiles")
-        plt.subplot(2,1,2)
-        plt.imshow(Data.iloc[0:5000,0:1000].transpose());plt.title("Original Data Across Profiles")
-        plt.savefig(outDir+'Profiles_Sigma-'+str(sigma)+'.png')
-        plt.close()
+    X.iloc[:,0:3000]=pt.smoothSlideProfiles(X.iloc[:,0:3000],dataHdr,sigma)
 
-    else:
-        print("No Within Slide Smoothing Applied")
+    # Plot Original Profiles for Density,Area,Eccentricity
+    plt.subplot(2,3,1)
+    plt.imshow(Data.iloc[0:5000,0:1000].transpose())
+    plt.subplot(2,3,2)
+    plt.imshow(Data.iloc[0:5000,1000:2000].transpose());plt.title("Original Data Across Profiles")
+    plt.subplot(2,3,3)
+    plt.imshow(Data.iloc[0:5000,2000:3000].transpose())
+
+    # Plot Smoothed Profiles for Density,Area,Eccentricity
+    plt.subplot(2,3,4)
+    plt.imshow(X.iloc[0:5000,0:1000].transpose())
+    plt.subplot(2,3,5)
+    plt.imshow(X.iloc[0:5000,1000:2000].transpose());plt.title("Smoothed Data Across Profiles")
+    plt.subplot(2,3,6)
+    plt.imshow(X.iloc[0:5000,2000:3000].transpose())
+
+
+    plt.savefig(outDir+'Profiles_Sigma-'+str(sigma)+'.png')
+    plt.close()
+    print("Within Slide Smoothing Applied - Sigma: "+ str(sigma) )
 
     ################ Withing Slide Normalization (OPTINAL - May not be appropriate step ) ###############
 
     if(slideNorm):
-        X.iloc[:,0:3000] = slideNormalization(X.iloc[:,0:3000] ,dataHdr)
+        # Density Profiles
+        X.iloc[:,0:1000] = pt.slideNormalization(X.iloc[:,0:1000] ,dataHdr)
+        
+        # Area Profiles
+        X.iloc[:,1000:2000] = pt.slideNormalization(X.iloc[:,1000:2000] ,dataHdr)
 
-        plt.figure(figsize=[10,10])
-        ax=plt.subplot(2,1,1)
-        plt.imshow(X.iloc[0:5000,0:1000].transpose());plt.title("Normalized Data Across Profiles")
-        plt.subplot(2,1,2)
-        plt.imshow(Data.iloc[0:5000,0:1000].transpose());plt.title("Original Data Across Profiles")
-        if(SmoothData):
-            plt.savefig(outDir+'Profiles_Normalized_Sigma-'+str(sigma) +'.png')
-        else:
-            plt.savefig(outDir+'Profiles_Normalized' +'.png')
+        # Eccentricity Profiles
+        X.iloc[:,2000:3000] = pt.slideNormalization(X.iloc[:,2000:3000] ,dataHdr)
+        
+        # Plot Original Profiles for Density,Area,Eccentricity
+        plt.subplot(2,3,1)
+        plt.imshow(Data.iloc[0:5000,0:1000].transpose())
+        plt.subplot(2,3,2)
+        plt.imshow(Data.iloc[0:5000,1000:2000].transpose());plt.title("Original Data Across Profiles")
+        plt.subplot(2,3,3)
+        plt.imshow(Data.iloc[0:5000,2000:3000].transpose())
+
+        # Plot Normalized Profiles for Density,Area,Eccentricity
+        plt.subplot(2,3,4)
+        plt.imshow(X.iloc[0:5000,0:1000].transpose())
+        plt.subplot(2,3,5)
+        plt.imshow(X.iloc[0:5000,1000:2000].transpose());plt.title("Normalized Data Across Profiles")
+        plt.subplot(2,3,6)
+        plt.imshow(X.iloc[0:5000,2000:3000].transpose())
+        plt.savefig(outDir+'Profiles_Normalized_Sigma-'+ str(sigma) +'.png')
 
         print("Within Slide Normalization Applied")
     else:
@@ -66,13 +90,13 @@ def getPostProcessData(fn,outDir='./',SmoothData=True,sigma=5,slideNorm=False,di
     ##### Reduced Predictive Features (X) using Amunts Zilles Features to describe profile shape #####
  
     # Density Profiles
-    xDensity=getProfileShapeFeat(X.iloc[:,0:1000])
+    xDensity=pt.getProfileShapeFeat(X.iloc[:,0:1000])
     
     # Area Profiles
-    xArea=getProfileShapeFeat(X.iloc[:,1000:2000])
+    xArea=pt.getProfileShapeFeat(X.iloc[:,1000:2000])
 
     # Eccentricity Profiles
-    xEccentricity=getProfileShapeFeat(X.iloc[:,2000:3000])
+    xEccentricity=pt.getProfileShapeFeat(X.iloc[:,2000:3000])
 
     # MacroFeatures (Curvature and Thickness)
     xMacroFeat=X.iloc[:,3000:3003]
@@ -122,7 +146,7 @@ def getPostProcessData(fn,outDir='./',SmoothData=True,sigma=5,slideNorm=False,di
 
     ########################################   Return Data    ############################################
     print("###########################################################################################")
-    print(Data.head(n=5))
+    print(Xout.head(n=5))
     print("###########################################################################################")
     Data=pd.concat([X,dataHdr],axis=1)
-    return Data,Xout, dataHdr
+    return Data,Xout,dataHdr
