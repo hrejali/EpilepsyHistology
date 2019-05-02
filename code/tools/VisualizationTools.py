@@ -59,7 +59,7 @@ def DispSegmentation(mat,Data):
     comp = mat['/dataList/Comp']
     hdr = mat['/dataList/hdr']
 
-    #plt.figure(figsize=[50,50])
+    plt.figure(figsize=[50,50])
     idx=0
     for i in range(0,len(subjList)):
         sliceName=mat[hdr[i,0]]["slice"].value
