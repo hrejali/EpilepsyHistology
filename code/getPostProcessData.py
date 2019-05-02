@@ -13,8 +13,8 @@ from tools import VisualizationTools as vis
 from tools import ProcessingTools as pt
 
 
-exec(open("./code/tools/ProcessingTools.py").read())
-exec(open("./code/tools/VisualizationTools.py").read())
+#exec(open("./code/tools/ProcessingTools.py").read())
+#exec(open("./code/tools/VisualizationTools.py").read())
 
 
 def getPostProcessData(fn,outDir='./',sigma=5,slideNorm=False,dimReduction=False):
