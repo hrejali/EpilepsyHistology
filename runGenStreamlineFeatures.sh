@@ -1,13 +1,6 @@
 
 #!/bin/bash
 
-# if [ "$#" -lt 1 ]
-# then
-# 	echo "Usage: $0 < -f FEATURE >  <subjids>"
-# 	exit 0
-# fi
-
-
 func_name=genStreamlineFeatures
 res=100um_5umPad
 
@@ -34,6 +27,6 @@ then
 fi
 
 # Run Matlab 
-echo "addpath(genpath('$searchpath'));  $func_name('$data_dir','$list_dir','$outDir'); exit" | matlab -nosplash -nodesktop
+echo "addpath(genpath('$searchpath'));  $func_name('$data_dir','$list_dir','$data_dir'); exit" | matlab -nosplash -nodesktop
 echo ......................................... DONE ..............................................
 

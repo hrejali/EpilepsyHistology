@@ -21,7 +21,7 @@ def main(fn_Table,fn_List,outDir,sigma,slideNorm,dimReduction):
 
     clusterData(fn_Table,fn_List,outDir,sigma=sigma,slideNorm=slideNorm,dimReduction=dimReduction)
 
-def clusterData(fn_Table,fn_List,outDir,n_maxClusters=2,sigma=5,slideNorm=False,dimReduction=False):
+def clusterData(fn_Table,fn_List,outDir,n_maxClusters=30,sigma=5,slideNorm=False,dimReduction=False):
 
     # Header info used to save images
     hdrString='_Smoothing-'+str(sigma)+'_WithinSlideNormalization-'+str(slideNorm)+'_dimReduction-'+str(dimReduction)
