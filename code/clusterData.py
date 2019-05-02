@@ -122,7 +122,8 @@ def clusterData(fn_Table,fn_List,outDir,n_maxClusters=30,sigma=5,slideNorm=False
             plt.savefig(outDir + '/' + name + 'AverageProfiles_n_clusters-' + str(n_clusters) + hdrString + '.png')
             plt.close()
 
-            with h5py.File(fn_List, "a") as mat:
+            # changed this to a read only process to have multple proceses to acess file
+            with h5py.File(fn_List, "r") as mat:
                 vis.DispSegmentation(mat,Data)
                 plt.savefig(outDir +'/'+ name + 'ClusterResults_n_clusters-' + str(n_clusters) + hdrString +'.png')
                 plt.close()
