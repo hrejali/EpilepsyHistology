@@ -35,7 +35,7 @@ def clusterData(fn_Table,fn_List,outDir,n_maxClusters=2,sigma=5,slideNorm=False,
 
     plt.figure(figsize=[10,10])
     sns.pairplot(X)
-    plt.savefig(outDir+'Data'+hdrString+'.png')
+    plt.savefig(outDir+'/'+'Data'+hdrString+'.png')
     plt.close()
 
     ########################################   Cluster    ############################################
@@ -119,12 +119,12 @@ def clusterData(fn_Table,fn_List,outDir,n_maxClusters=2,sigma=5,slideNorm=False,
             plt.figure(figsize=[10,10])
             plt.subplot(1,2,1); vis.AverageDensityClusterProfile(Data)
             plt.subplot(1,2,2); vis.AverageSizeClusterProfile(Data)
-            plt.savefig(outDir+name+'AverageProfiles_n_clusters-'+ str(n_clusters) + hdrString + '.png')
+            plt.savefig(outDir + '/' + name + 'AverageProfiles_n_clusters-' + str(n_clusters) + hdrString + '.png')
             plt.close()
 
             with h5py.File(fn_List, "a") as mat:
                 vis.DispSegmentation(mat,Data)
-                plt.savefig(outDir + name + 'ClusterResults_n_clusters-' + str(n_clusters) + hdrString +'.png')
+                plt.savefig(outDir +'/'+ name + 'ClusterResults_n_clusters-' + str(n_clusters) + hdrString +'.png')
                 plt.close()
             
             # Display Data with cluster Labels

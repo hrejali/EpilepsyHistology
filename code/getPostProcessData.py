@@ -51,7 +51,7 @@ def getPostProcessData(fn,outDir='./',sigma=5,slideNorm=False,dimReduction=False
     plt.imshow(X.iloc[0:5000,2000:3000].transpose())
 
 
-    plt.savefig(outDir+'Profiles_Sigma-'+str(sigma)+'.png')
+    plt.savefig(outDir+'/'+'Profiles_Sigma-'+str(sigma)+'.png')
     plt.close()
     print("Within Slide Smoothing Applied - Sigma: "+ str(sigma) )
 
@@ -82,7 +82,7 @@ def getPostProcessData(fn,outDir='./',sigma=5,slideNorm=False,dimReduction=False
         plt.imshow(X.iloc[0:5000,1000:2000].transpose());plt.title("Normalized Data Across Profiles")
         plt.subplot(2,3,6)
         plt.imshow(X.iloc[0:5000,2000:3000].transpose())
-        plt.savefig(outDir+'Profiles_Normalized_Sigma-'+ str(sigma) +'.png')
+        plt.savefig(outDir + '/' + 'Profiles_Normalized_Sigma-' + str(sigma) +'.png')
         plt.close()
 
         print("Within Slide Normalization Applied")
