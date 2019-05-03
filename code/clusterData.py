@@ -25,6 +25,7 @@ def clusterData(fn_Table,fn_List,outDir,n_maxClusters=30,sigma=5,slideNorm=False
 
     # Header info used to save images
     hdrString='_Smoothing-'+str(sigma)+'_WithinSlideNormalization-'+str(slideNorm)+'_dimReduction-'+str(dimReduction)
+    print(hdrString)
 
 
     # Data is the Original unprocessed Data
@@ -142,10 +143,11 @@ if __name__ == "__main__":
     parser.add_argument("-list",dest="list",help="h5py List containing variety of structured data",required=True)
     parser.add_argument("-o",dest="outdir",help="Output directory",required=True)
     parser.add_argument("--sig",dest="sig",default=5,type=int,help="Gussian Smoothing Sigma <Default sig=5>")
-    parser.add_argument("--norm",dest="norm_flag",default=False,type=bool,help="Normalize Data within slide")
-    parser.add_argument("--pca",dest="dimReduction",default=False,type=bool,help="Apply PCA to data")
+    parser.add_argument("--norm",dest="norm_flag",default='False',type=str,help="Normalize Data within slide <True/False>")
+    parser.add_argument("--pca",dest="dimReduction",default='False',type=str,help="Apply PCA to data <True/False>")
     args=parser.parse_args()
-    main(args.infile,args.list,args.outdir,args.sig,args.norm_flag,args.dimReduction)
+
+    main(args.infile,args.list,args.outdir,args.sig,args.norm_flag=='True',args.dimReduction=='True')
 
 
 
