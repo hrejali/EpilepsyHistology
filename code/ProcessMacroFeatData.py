@@ -13,7 +13,11 @@ from tools import VisualizationTools as vis
 from tools import ProcessingTools as pt
 
 
-def ProcessMacroFeatData(Data,outDir='./',sigma=5,slideNorm=False,dimReduction=False):
+def ProcessMacroFeatData(fn,outDir='./',sigma=5,slideNorm=False,dimReduction=False):
+    # Reading in the Data 
+    Data=pd.read_csv(fn)
+    Data=vis.getCondenseSubjectList(Data)
+
     ## Header Data
     dataHdr=Data.iloc[:,-4:len(Data.columns)]
 
@@ -38,6 +42,7 @@ def ProcessMacroFeatData(Data,outDir='./',sigma=5,slideNorm=False,dimReduction=F
     ################################## Predictive Features (X) ##########################################
     # create a DataFrame called `X` holding the predictive features.
     # Features include only Curvature and Thickness Metrics
+    X=pd.DataFrame()
     X["Curvature"]=Data["Curvature"]
     X["Thickness"]=Data["Thickness"]
 
@@ -46,7 +51,17 @@ def ProcessMacroFeatData(Data,outDir='./',sigma=5,slideNorm=False,dimReduction=F
 
     X=pt.smoothSlideFeat(X,dataHdr,sigma)
 
+ ############################## Bewteen Subject Normalization #########################################
 
+    # Normalize Data using Z-scores
+    cols = list(X.columns)
+    Xz=pd.DataFrame()
+    for col in cols:
+        col_zscore = col + '_zscore'
+        Xz[col_zscore] = (X[col] - X[col].mean())/X[col].std(ddof=0)
+    Xz
+    
+    print("Bewteen Subject Normalization Applied")
     ##################################### Macrofeature Filtering #########################################
 
     Xz['Curvature_zscore']=sp.signal.medfilt(Xz['Curvature_zscore'],kernel_size=11)

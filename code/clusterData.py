@@ -120,13 +120,13 @@ def clusterData(fn_Table,fn_List,outDir,n_maxClusters=30,sigma=5,slideNorm=False
             plt.figure(figsize=[10,10])
             plt.subplot(1,2,1); vis.AverageDensityClusterProfile(Data)
             plt.subplot(1,2,2); vis.AverageSizeClusterProfile(Data)
-            plt.savefig(outDir + '/' + name + 'AverageProfiles_n_clusters-' + str(n_clusters) + hdrString + '.png')
+            plt.savefig(outDir + '/' + name + '_AverageProfiles_n_clusters-' + str(n_clusters) + hdrString + '.png')
             plt.close()
 
             # changed this to a read only process to have multple proceses to acess file
             with h5py.File(fn_List, "r") as mat:
                 vis.DispSegmentation(mat,Data)
-                plt.savefig(outDir +'/'+ name + 'ClusterResults_n_clusters-' + str(n_clusters) + hdrString +'.png')
+                plt.savefig(outDir +'/'+ name + '_ClusterResults_n_clusters-' + str(n_clusters) + hdrString +'.png')
                 plt.close()
             
             # Display Data with cluster Labels

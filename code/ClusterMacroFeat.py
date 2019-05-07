@@ -98,14 +98,14 @@ def clusterMacroFeat(fn_Table,fn_List,outDir,n_maxClusters=10,sigma=5):
     
         clustering_algorithms = (
             ('KMeans', k),
-            ('SpectralClustering', spectral),
-            ('Ward',ward),
-            ('AgglomerativeClustering_Avg_Cosine',average_linkage_cosine),
-            ('AgglomerativeClustering_Avg_Cosine',average_linkage_euclidean),
-            ('AgglomerativeClustering_Avg_Cosine',average_linkage_manhattan),
-            ('AgglomerativeClustering_Comp_Cosine',complete_linkage_cosine),
-            ('AgglomerativeClustering_Comp_Euclidean',complete_linkage_euclidean),
-            ('AgglomerativeClustering_Comp_manhattan',complete_linkage_manhattan),
+            #('SpectralClustering', spectral),
+            #('Ward',ward),
+            #('AgglomerativeClustering_Avg_Cosine',average_linkage_cosine),
+            #('AgglomerativeClustering_Avg_Cosine',average_linkage_euclidean),
+            #('AgglomerativeClustering_Avg_Cosine',average_linkage_manhattan),
+            #('AgglomerativeClustering_Comp_Cosine',complete_linkage_cosine),
+            #('AgglomerativeClustering_Comp_Euclidean',complete_linkage_euclidean),
+            #('AgglomerativeClustering_Comp_manhattan',complete_linkage_manhattan),
             )
     
         for name, algorithm in clustering_algorithms:

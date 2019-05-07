@@ -13,10 +13,6 @@ from tools import VisualizationTools as vis
 from tools import ProcessingTools as pt
 
 
-#exec(open("./code/tools/ProcessingTools.py").read())
-#exec(open("./code/tools/VisualizationTools.py").read())
-
-
 def getPostProcessData(fn,outDir='./',sigma=5,slideNorm=False,dimReduction=False):
     # Reading in the Data 
     Data=pd.read_csv(fn)
@@ -25,14 +21,32 @@ def getPostProcessData(fn,outDir='./',sigma=5,slideNorm=False,dimReduction=False
     ## Header Data
     dataHdr=Data.iloc[:,-4:len(Data.columns)]
 
-    ## Predictive Features (X)
+    ################################## Correct Curvature Sign for Subjects ##############################
+    # Quality Control - These subjects had incorrect Curvature signs maunally correcting
+      SlideNames = (
+            ('EPI_P027_Neo_05_NEUN', 2),
+            ('EPI_P033_Neo_06_NEUN', 1),
+            ('EPI_P046_Neo_05_NEUN', 1),
+            ('EPI_P046_Neo_05_NEUN', 2),
+            ('EPI_P051_Neo_08_NEUN', 1),
+            ('EPI_P058_Neo_08_NEUN', 1),
+            ('EPI_P066_Neo_08_NEUN', 1),
+            ('EPI_P079_Neo_04_NEUN', 1),
+    )
+     
+    for slide, comp in SlideNames:
+     
+        idx = Data[(Data['Component'] == comp) & (Data['Subject'] == slide)].index
+        Data.ix[idx,"Curvature"]=-1*Data.ix[idx,"Curvature"] 
+
+    ################################## Predictive Features (X) ##########################################
     # create a DataFrame called `X` holding the predictive features.
     # Features include all columns with the excpetion of the last 5, which are descriptors
     X=Data.iloc[:,:-4]
 
     ############### Withing Slide Smoothing (OPTINAL - Data is already smoothed) ########################
 
-    X.iloc[:,0:3000]=pt.smoothSlideProfiles(X.iloc[:,0:3000],dataHdr,sigma)
+    X.iloc[:,0:3000]=pt.smoothSlideFeat(X.iloc[:,0:3000],dataHdr,sigma)
 
     # Plot Original Profiles for Density,Area,Eccentricity
     plt.subplot(2,3,1)
