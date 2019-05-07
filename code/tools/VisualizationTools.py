@@ -337,6 +337,7 @@ def getSilhouettePlot(X,cluster_labels,n_clusters):
     ax2.set_xlabel("Feature space for the 1st feature")
     ax2.set_ylabel("Feature space for the 2nd feature")
 
-    plt.suptitle(("Silhouette analysis for KMeans clustering on sample data "
+    plt.suptitle(("Silhouette analysis clustering on sample data "
                 "with n_clusters = %d" % n_clusters),
-                fontsize=14, fontweight='bold') 
+                fontsize=14, fontweight='bold')
+    return  silhouette_avg

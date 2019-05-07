@@ -98,14 +98,14 @@ def clusterMacroFeat(fn_Table,fn_List,outDir,n_maxClusters=10,sigma=5):
     
         clustering_algorithms = (
             ('KMeans', k),
-            #('SpectralClustering', spectral),
-            #('Ward',ward),
-            #('AgglomerativeClustering_Avg_Cosine',average_linkage_cosine),
-            #('AgglomerativeClustering_Avg_Cosine',average_linkage_euclidean),
-            #('AgglomerativeClustering_Avg_Cosine',average_linkage_manhattan),
-            #('AgglomerativeClustering_Comp_Cosine',complete_linkage_cosine),
-            #('AgglomerativeClustering_Comp_Euclidean',complete_linkage_euclidean),
-            #('AgglomerativeClustering_Comp_manhattan',complete_linkage_manhattan),
+            ('SpectralClustering', spectral),
+            ('Ward',ward),
+            ('AgglomerativeClustering_Avg_Cosine',average_linkage_cosine),
+            ('AgglomerativeClustering_Avg_Cosine',average_linkage_euclidean),
+            ('AgglomerativeClustering_Avg_Cosine',average_linkage_manhattan),
+            ('AgglomerativeClustering_Comp_Cosine',complete_linkage_cosine),
+            ('AgglomerativeClustering_Comp_Euclidean',complete_linkage_euclidean),
+            ('AgglomerativeClustering_Comp_manhattan',complete_linkage_manhattan),
             )
     
         for name, algorithm in clustering_algorithms:
@@ -114,14 +114,15 @@ def clusterMacroFeat(fn_Table,fn_List,outDir,n_maxClusters=10,sigma=5):
             Data["Clusters"]=algorithm.labels_
 
             ## Plotting Average Density and Size Profiles
-            vis.getSilhouettePlot(X,algorithm.labels_,n_clusters)
-            plt.savefig(outDir + '/' + name + '_Silhouette_n_clusters-' + str(n_clusters) + hdrString + '.png')
+            silhouette_avg=vis.getSilhouettePlot(X,algorithm.labels_,n_clusters)
+            silhouette_avg = float("%0.3f" % silhouette_avg)
+            plt.savefig(outDir + '/' + name + '_Silhouette-'+str(silhouette_avg)+'_n_clusters-' + str(n_clusters) + hdrString + '.png')
             plt.close()
 
             # changed this to a read only process to have multple proceses to acess file
             with h5py.File(fn_List, "r") as mat:
                 vis.DispSegmentation(mat,Data)
-                plt.savefig(outDir +'/'+ name + '_ClusterResults_n_clusters-' + str(n_clusters) + hdrString +'.png')
+                plt.savefig(outDir +'/'+ name + '_ClusterResults_SilhouetteAvg-'+str(silhouette_avg)+'_n_clusters-' + str(n_clusters) + hdrString +'.png')
                 plt.close()
             
 
