@@ -27,17 +27,17 @@ def smooth(a,WSZ):
     return np.concatenate((  start , out0, stop  ))
 
 
-def smoothSlideProfiles(Data,hdrData,sigma=5):
+def smoothSlideFeat(Data,hdrData,sigma=5):
     ##################################################################################################################
     # Description:
     # Function to horizontally smooth acorss profiles 
 
     #Inputs:
-    # <Data>: Pandas Dataframe containing data from a specific featuremap eg).Density, Area, Eccentricty
+    # <Data>: Pandas Dataframe containing data from a specific feature eg).Density, Area, Eccentricty, Curvature, Thickness
     # <hdrData>: Pandas Datafram containing header information describing each profile 
 
     #Outputs:
-    # <dataOut>: Pandas Dataframe containing smooted data from a specific featuremap eg).Density,Area,Eccentricty
+    # <dataOut>: Pandas Dataframe containing smooted data from a specific feature eg).Density, Area, Eccentricty, Curvature, Thickness
 
     ##################################################################################################################
 
