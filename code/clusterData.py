@@ -1,4 +1,6 @@
 import sys, getopt
+import numpy as np
+import pandas as pd
 
 from sklearn.cluster import KMeans
 from sklearn.cluster import DBSCAN
@@ -14,7 +16,12 @@ import h5py
 import os
 import code 
 import getPostProcessData as gd
+import ProcessMacroFeatData as gmd
+import runClusterAlg as rc
 from tools import VisualizationTools as vis
+
+from sklearn.cluster import SpectralClustering
+from sklearn.metrics import silhouette_score
 
 
 def main(fn_Table,fn_List,outDir,sigma,slideNorm,dimReduction):
@@ -24,7 +31,8 @@ def main(fn_Table,fn_List,outDir,sigma,slideNorm,dimReduction):
 def clusterData(fn_Table,fn_List,outDir,n_maxClusters=30,sigma=5,slideNorm=False,dimReduction=False):
 
     # Header info used to save images
-    hdrString='_Smoothing-'+str(sigma)+'_WithinSlideNormalization-'+str(slideNorm)+'_dimReduction-'+str(dimReduction)
+    #hdrString='Smoothing-'+str(sigma)+'_WithinSlideNormalization-'+str(slideNorm)+'_dimReduction-'+str(dimReduction)
+    hdrString='Smoothing-'+str(sigma)+'_dimReduction-'+str(dimReduction)
     print(hdrString)
 
 
@@ -39,101 +47,54 @@ def clusterData(fn_Table,fn_List,outDir,n_maxClusters=30,sigma=5,slideNorm=False
     plt.savefig(outDir+'/'+'Data'+hdrString+'.png')
     plt.close()
 
+    ####################################### Cluster Macro Feat ######################################
+
+    XMacro=gmd.ProcessMacroFeatData(fn_Table,outDir,sigma=30)
+    n_clusters=4
+    k = KMeans(n_clusters=n_clusters,random_state=10)
+    name='KMeans'
+
+    k.fit(XMacro)
+    # Assign Labels
+    Data["macroLabel"]=k.labels_
+    Data["Clusters"]=k.labels_
+
+    ## Plotting Average Density and Size Profiles
+    silhouette_avg=vis.getSilhouettePlot(XMacro,k.labels_,n_clusters)
+    silhouette_avg = float("%0.3f" % silhouette_avg)
+    plt.savefig(outDir + '/MacroClustering_' + name + '_SilhouetteAvg-'+str(silhouette_avg)+'_n_clusters-' + str(n_clusters) + hdrString + '.png')
+    plt.close()
+
+    # changed this to a read only process to have multple proceses to acess file
+    with h5py.File(fn_List, "r") as mat:
+        vis.DispSegmentation(mat,Data)
+        plt.savefig(outDir +'/MacroClustering_'+ name + '_ClusterResults_SilhouetteAvg-'+str(silhouette_avg)+'_n_clusters-' + str(n_clusters) + hdrString +'.png')
+        plt.close()
+
+    # Get Cluster Label Corresponding to Out of Plane Slicing -- This is the Cluster with the highest avg thickness
+    arrThickness=np.zeros(n_clusters)
+    for cluster_num in range(0,n_clusters):
+        idx = Data[(Data["macroLabel"] == cluster_num)].index
+        # Second Column is Thickness
+        avgThickness=np.mean(XMacro.iloc[idx,1])
+        arrThickness[cluster_num]=avgThickness
+    idxArtifact=arrThickness.argmax()
+
     ########################################   Cluster    ############################################
-    print("###########################################################################################")
-    print(Data.head(n=5))
-    print("###########################################################################################")
-
-    # Run Through Hyper Parameters
-    for n_clusters in range(2,n_maxClusters+1):
-
-        # ============================
-        # Create cluster objects
-        #   1) K-Menas Clustering
-        #   2) Spectral Clustering
-        #   3) Agglomerative Clustering
-        # ============================
-
-        k = KMeans(n_clusters=n_clusters,random_state=10)
+    # This is based on prior knowledge of how the data gets clustered
+    regions=["Sulci","Artifact","Straight","Gyri"]
+    # Run Through Each Cluster
+    for cluster_num in range(0,n_clusters):
     
-        spectral = SpectralClustering(
-            n_clusters=n_clusters, eigen_solver='arpack',random_state=10,
-            affinity ="nearest_neighbors")
+        if(cluster_num == idxArtifact):
+            continue
+        hdr=hdrString+"_Region-"+regions[cluster_num]
+        # Only analyze data with boolean == TRUE 
+        Data["Analyze"]=(Data["macroLabel"] == cluster_num)
 
-        # ==============================================================
-        # Agglomerative Clustering: Linkage={ward,complete,average}
-        #                           Affinity={cosine,euclidean,manhattan}
-        # ==============================================================
-
-        # Ward linkage
-        ward = AgglomerativeClustering(
-            n_clusters=n_clusters, linkage='ward')
-        
-        # Average Linkage
-        average_linkage_cosine = AgglomerativeClustering(
-            linkage="average", affinity="cosine",
-            n_clusters=n_clusters)
-
-        average_linkage_euclidean = AgglomerativeClustering(
-            linkage="average", affinity="euclidean",
-            n_clusters=n_clusters)
-        
-        average_linkage_manhattan = AgglomerativeClustering(
-            linkage="average", affinity="manhattan",
-            n_clusters=n_clusters)
-        
-        # Complete Linkage
-        complete_linkage_cosine = AgglomerativeClustering(
-            linkage="complete", affinity="cosine",
-            n_clusters=n_clusters)
-
-        complete_linkage_euclidean = AgglomerativeClustering(
-            linkage="complete", affinity="euclidean",
-            n_clusters=n_clusters)
-        
-        complete_linkage_manhattan = AgglomerativeClustering(
-            linkage="complete", affinity="manhattan",
-            n_clusters=n_clusters)
-
-        # =====================================
-        # Create Name, and Cluster Objects Pair
-        # =====================================
-    
-        clustering_algorithms = (
-            ('KMeans', k),
-            ('SpectralClustering', spectral),
-            ('Ward',ward),
-            ('AgglomerativeClustering_Avg_Cosine',average_linkage_cosine),
-            ('AgglomerativeClustering_Avg_Cosine',average_linkage_euclidean),
-            ('AgglomerativeClustering_Avg_Cosine',average_linkage_manhattan),
-            ('AgglomerativeClustering_Comp_Cosine',complete_linkage_cosine),
-            ('AgglomerativeClustering_Comp_Euclidean',complete_linkage_euclidean),
-            ('AgglomerativeClustering_Comp_manhattan',complete_linkage_manhattan),
-            )
-    
-        for name, algorithm in clustering_algorithms:
-            algorithm.fit(X)
-            # Assign Labels
-            Data["Clusters"]=algorithm.labels_
-
-            ## Plotting Average Density and Size Profiles
-            plt.figure(figsize=[10,10])
-            plt.subplot(1,2,1); vis.AverageDensityClusterProfile(Data)
-            plt.subplot(1,2,2); vis.AverageSizeClusterProfile(Data)
-            plt.savefig(outDir + '/' + name + '_AverageProfiles_n_clusters-' + str(n_clusters) + hdrString + '.png')
-            plt.close()
-
-            # changed this to a read only process to have multple proceses to acess file
-            with h5py.File(fn_List, "r") as mat:
-                vis.DispSegmentation(mat,Data)
-                plt.savefig(outDir +'/'+ name + '_ClusterResults_n_clusters-' + str(n_clusters) + hdrString +'.png')
-                plt.close()
-            
-            # Display Data with cluster Labels
-            #plt.figure(figsize=[10,10])
-            #sns.pairplot(X,hue=Data["Clusters"].values)
-            #plt.savefig(outDir+'Data-Labels_n_clusters-'+ str(n_clusters) +hdrString+'.png')
-            #plt.close()
+        rc.runRandForestAlg(Data,X,fn_List,outDir,hdr)
+        rc.runClusterAlg(Data,X,fn_List,outDir,hdr)
+        rc.runDBSCANAlg(Data,X,fn_List,outDir,hdr)
 
 
 if __name__ == "__main__":

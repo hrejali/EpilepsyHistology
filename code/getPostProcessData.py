@@ -16,28 +16,11 @@ from tools import ProcessingTools as pt
 def getPostProcessData(fn,outDir='./',sigma=5,slideNorm=False,dimReduction=False):
     # Reading in the Data 
     Data=pd.read_csv(fn)
+    # Labels each Streamline to a SubjID ex) P015
     Data=vis.getCondenseSubjectList(Data)
 
     ## Header Data
     dataHdr=Data.iloc[:,-4:len(Data.columns)]
-
-    ################################## Correct Curvature Sign for Subjects ##############################
-    # Quality Control - These subjects had incorrect Curvature signs maunally correcting
-      SlideNames = (
-            ('EPI_P027_Neo_05_NEUN', 2),
-            ('EPI_P033_Neo_06_NEUN', 1),
-            ('EPI_P046_Neo_05_NEUN', 1),
-            ('EPI_P046_Neo_05_NEUN', 2),
-            ('EPI_P051_Neo_08_NEUN', 1),
-            ('EPI_P058_Neo_08_NEUN', 1),
-            ('EPI_P066_Neo_08_NEUN', 1),
-            ('EPI_P079_Neo_04_NEUN', 1),
-    )
-     
-    for slide, comp in SlideNames:
-     
-        idx = Data[(Data['Component'] == comp) & (Data['Subject'] == slide)].index
-        Data.ix[idx,"Curvature"]=-1*Data.ix[idx,"Curvature"] 
 
     ################################## Predictive Features (X) ##########################################
     # create a DataFrame called `X` holding the predictive features.
@@ -48,23 +31,8 @@ def getPostProcessData(fn,outDir='./',sigma=5,slideNorm=False,dimReduction=False
 
     X.iloc[:,0:3000]=pt.smoothSlideFeat(X.iloc[:,0:3000],dataHdr,sigma)
 
-    # Plot Original Profiles for Density,Area,Eccentricity
-    plt.subplot(2,3,1)
-    plt.imshow(Data.iloc[0:5000,0:1000].transpose())
-    plt.subplot(2,3,2)
-    plt.imshow(Data.iloc[0:5000,1000:2000].transpose());plt.title("Original Data Across Profiles")
-    plt.subplot(2,3,3)
-    plt.imshow(Data.iloc[0:5000,2000:3000].transpose())
-
-    # Plot Smoothed Profiles for Density,Area,Eccentricity
-    plt.subplot(2,3,4)
-    plt.imshow(X.iloc[0:5000,0:1000].transpose())
-    plt.subplot(2,3,5)
-    plt.imshow(X.iloc[0:5000,1000:2000].transpose());plt.title("Smoothed Data Across Profiles")
-    plt.subplot(2,3,6)
-    plt.imshow(X.iloc[0:5000,2000:3000].transpose())
-
-
+    # Plot Figures and Save
+    vis.displayProcessedProfiles(Data,X)
     plt.savefig(outDir+'/'+'Profiles_Sigma-'+str(sigma)+'.png')
     plt.close()
     print("Within Slide Smoothing Applied - Sigma: "+ str(sigma) )
@@ -81,21 +49,8 @@ def getPostProcessData(fn,outDir='./',sigma=5,slideNorm=False,dimReduction=False
         # Eccentricity Profiles
         X.iloc[:,2000:3000] = pt.slideNormalization(X.iloc[:,2000:3000] ,dataHdr)
         
-        # Plot Original Profiles for Density,Area,Eccentricity
-        plt.subplot(2,3,1)
-        plt.imshow(Data.iloc[0:5000,0:1000].transpose())
-        plt.subplot(2,3,2)
-        plt.imshow(Data.iloc[0:5000,1000:2000].transpose());plt.title("Original Data Across Profiles")
-        plt.subplot(2,3,3)
-        plt.imshow(Data.iloc[0:5000,2000:3000].transpose())
-
-        # Plot Normalized Profiles for Density,Area,Eccentricity
-        plt.subplot(2,3,4)
-        plt.imshow(X.iloc[0:5000,0:1000].transpose())
-        plt.subplot(2,3,5)
-        plt.imshow(X.iloc[0:5000,1000:2000].transpose());plt.title("Normalized Data Across Profiles")
-        plt.subplot(2,3,6)
-        plt.imshow(X.iloc[0:5000,2000:3000].transpose())
+         # Plot Figures and Save
+        vis.displayProcessedProfiles(Data,X)
         plt.savefig(outDir + '/' + 'Profiles_Normalized_Sigma-' + str(sigma) +'.png')
         plt.close()
 
@@ -116,9 +71,9 @@ def getPostProcessData(fn,outDir='./',sigma=5,slideNorm=False,dimReduction=False
     xEccentricity=pt.getProfileShapeFeat(X.iloc[:,2000:3000])
 
     # MacroFeatures (Curvature and Thickness)
-    xMacroFeat=X.iloc[:,3000:3003]
+    #xMacroFeat=X.iloc[:,3000:3003]
 
-    Xreduced=pd.concat([xDensity,xArea,xEccentricity,xMacroFeat],axis=1)
+    Xreduced=pd.concat([xDensity,xArea,xEccentricity],axis=1)
     print("Profile Feature Extraction - Features Describe Profile Shape")
 
     ############################## Bewteen Subject Normalization #########################################
@@ -130,17 +85,8 @@ def getPostProcessData(fn,outDir='./',sigma=5,slideNorm=False,dimReduction=False
         col_zscore = col + '_zscore'
         Xz[col_zscore] = (Xreduced[col] - Xreduced[col].mean())/Xreduced[col].std(ddof=0)
     Xz
-    
-    print("Bewteen Subject Normalization Applied")
-
-    ##################################### Macrofeature Filtering #########################################
-
-    Xz['Curvature_zscore']=sp.signal.medfilt(Xz['Curvature_zscore'],kernel_size=11)
-    Xz['Thickness_zscore']=sp.signal.medfilt(Xz['Thickness_zscore'],kernel_size=11)
-
     Xout=Xz
-
-    print("Macroscale Features Filtered Using Median Filter")
+    print("Bewteen Subject Normalization Applied")
 
     ######################### Reduce Dimensionality using PCA (OPTIONAL) #################################
 

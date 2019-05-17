@@ -8,8 +8,7 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import silhouette_samples, silhouette_score
 
-
-
+from math import pi
 
 def DispSubjectData(mat):
     ##################################################################################################################
@@ -43,7 +42,7 @@ def DispSubjectData(mat):
         
     plt.tight_layout()
 
-def DispSegmentation(mat,Data):
+def DispSegmentation(mat,Data,includeIgnoreLabel=False):
     ##################################################################################################################
     # Description:
     # Creates a subplot of featuremap images for each slide in addition overlays streamlines colored by the label.
@@ -56,7 +55,10 @@ def DispSegmentation(mat,Data):
     ##################################################################################################################
 
     
-    LabelMinMax=[min(Data["Clusters"]),max(Data["Clusters"])]
+    #LabelMinMax=[min(Data["Clusters"]),max(Data["Clusters"])]
+    labelValues=Data["Clusters"].values
+    labelValues=np.unique(labelValues)
+
     subjList=list(dict.fromkeys(Data["Subject"])) 
     
     comp = mat['/dataList/Comp']
@@ -76,14 +78,14 @@ def DispSegmentation(mat,Data):
                 plt.imshow(mat[mat[comp[i,0]]["FeatureMap"][compNum,0]].value,cmap="viridis")
                 plt.axis('off')
                 ax.set_aspect('auto')
-                Streamlineplot(mat,subjData(sliceName,compNum+1,Data),i,compNum,LabelMinMax)
+                Streamlineplot(mat,subjData(sliceName,compNum+1,Data),i,compNum,labelValues,includeIgnoreLabel)
                 idx=idx+1
         else:
             ax=plt.subplot(8,9,idx+1)
             plt.imshow(mat[comp[i,0]]["FeatureMap"].value,cmap="viridis")
             plt.axis('off')
             ax.set_aspect('auto')
-            Streamlineplot(mat,subjData(sliceName,1,Data),i,compNum,LabelMinMax)
+            Streamlineplot(mat,subjData(sliceName,1,Data),i,compNum,labelValues,includeIgnoreLabel)
             idx=idx+1
         
     plt.tight_layout()
@@ -111,7 +113,7 @@ def subjData(sliceName,Comp,hdrData):
     
     return DataOut
 
-def Streamlineplot(mat,Data,subjNum,Comp,LabelMinMax):
+def Streamlineplot(mat,Data,subjNum,Comp,labelValues,includeIgnoreLabel):
     ##################################################################################################################
     # Description:
     # Creates a subplot of density featuremap images for each slide in addition overlays streamlines colored by the label. 
@@ -155,22 +157,32 @@ def Streamlineplot(mat,Data,subjNum,Comp,LabelMinMax):
         
     #......... THIS IS A HACK TO FORCE CONSISTENT LABEL COLORING SCHEM ACROSS SUBJECTS  .................
     # Adding NaN points at each label instance 
-    NumLabels=int(LabelMinMax[1]-LabelMinMax[0]+1)
-    
-    NaNList=[i for i in range(NumLabels)]
+    NaNList=labelValues
+    NumLabels=len(NaNList)
 
     labelList=np.append(labelList,NaNList)
     
     NaNStreams = np.empty(NumLabels) * np.nan
     x = np.append(x,NaNStreams)
     y = np.append(y,NaNStreams)
-     # ....................................................................................................
+
+    c=sns.color_palette("Set1",NumLabels)
+
+    # If this is True make first color black/greyish while keeping the original order of colors
+    if(includeIgnoreLabel):
+        temp=c.copy()
+        for i in range(0,NumLabels-1):
+            temp[i+1]=c[i]
+        temp[0]=(0.1,0.1,0.1)
+        c=temp 
+
+     # ................................ Plot Scatter Points ................................................
     if(subjNum==0 & Comp==0):                    
         sns.scatterplot(x=y,y=x,hue=labelList,legend='full',size=0.00001,
-                        edgecolor='none',palette="Paired")
+                        edgecolor='none',palette=c)
     else:
         sns.scatterplot(x=y,y=x,hue=labelList,legend=False,size=0.00001,
-                        edgecolor='none',palette="Paired")                   
+                        edgecolor='none',palette=c)                   
 
 
 def ClusterProfile(Data):
@@ -341,3 +353,96 @@ def getSilhouettePlot(X,cluster_labels,n_clusters):
                 "with n_clusters = %d" % n_clusters),
                 fontsize=14, fontweight='bold')
     return  silhouette_avg
+
+def displayProcessedProfiles(Data,X):
+    plt.figure(figsize=[50,50])
+    # Plot Original Profiles for Density,Area,Eccentricity
+    plt.subplot(2,3,1)
+    plt.imshow(Data.iloc[:,0:1000].transpose())
+    plt.subplot(2,3,2)
+    plt.imshow(Data.iloc[:,1000:2000].transpose());plt.title("Original Data Across Profiles")
+    plt.subplot(2,3,3)
+    plt.imshow(Data.iloc[:,2000:3000].transpose())
+
+    # Plot Normalized Profiles for Density,Area,Eccentricity
+    plt.subplot(2,3,4)
+    plt.imshow(X.iloc[:,0:1000].transpose())
+    plt.subplot(2,3,5)
+    plt.imshow(X.iloc[:,1000:2000].transpose());plt.title("Processed Data Across Profiles")
+    plt.subplot(2,3,6)
+    plt.imshow(X.iloc[:,2000:3000].transpose())
+
+##################################### RADAR PLOTS ################################################
+
+
+# ------- PART 1: Define a function that structures in a correct manner
+def create_radarDataFrame(X,Data,numFeat=10):
+    # list of labels in dataframe data 
+    labelList=Data["Clusters"].values
+    labelList=np.unique(labelList)
+    
+    cols = list(X.columns)
+    df=pd.DataFrame()
+    
+    # If Label is -10 this must be ignored
+    if (labelList[0]==-10):
+        labelList=np.delete(labelList, (0), axis=0)
+    numLabels=len(labelList)
+
+    # Calculate Average Feature within each cluster
+    featAvg = np.zeros((numFeat,numLabels))
+    for i,label in enumerate(labelList):
+        for j in range(0,numFeat):
+            idx= Data[(Data['Clusters'] == label)].index
+            featAvg[j,i]=X.iloc[idx,j].mean()
+    
+    for i,col in enumerate(cols):
+        col_avg = col[0] + str(i+1)
+        df[col_avg]=featAvg[i,:]
+    # convert Group labels to String
+    labelList = [str(numeric_string) for numeric_string in labelList]
+    df["group"]=labelList
+    return df
+
+
+# ------- PART 2: Define a function that do a plot for one line of the dataset!
+ 
+def make_spider(df,row, title, color,numGroups=4):
+ 
+    # number of variable
+    categories=list(df)[0:-1]
+    N = len(categories)
+ 
+    # What will be the angle of each axis in the plot? (we divide the plot / number of variable)
+    angles = [n / float(N) * 2 * pi for n in range(N)]
+    angles += angles[:1]
+ 
+    # Initialise the spider plot
+    ax = plt.subplot(np.ceil(numGroups/2),2,row+1, polar=True, )
+ 
+    # If you want the first axis to be on top:
+    ax.set_theta_offset(pi / 2)
+    ax.set_theta_direction(-1)
+ 
+    # Draw one axe per variable + add labels labels yet
+    plt.xticks(angles[:-1], categories, color='grey', size=8)
+ 
+    # Draw ylabels
+    ax.set_rlabel_position(0)
+    plt.yticks([-2,-1,0,1,2], ["-2","-1","0","1","2"], color="grey", size=7)
+    #maxVal=df.max().max();minVal=df.min().min()
+    #plt.ylim(minVal,maxVal)
+    plt.ylim(-2,2)
+ 
+    # Ind1
+    values=df.loc[row].drop('group').values.flatten().tolist()
+    values += values[:1]
+    ax.plot(angles, values, color=color, linewidth=2, linestyle='solid')
+    ax.fill(angles, values, color=color, alpha=0.4)
+ 
+    # Add a title
+    plt.title(title, size=11, color=color, y=1.1)
+
+
+    
+################################################################################################

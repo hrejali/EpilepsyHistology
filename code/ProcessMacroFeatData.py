@@ -13,7 +13,7 @@ from tools import VisualizationTools as vis
 from tools import ProcessingTools as pt
 
 
-def ProcessMacroFeatData(fn,outDir='./',sigma=5,slideNorm=False,dimReduction=False):
+def ProcessMacroFeatData(fn,outDir='./',sigma=5):
     # Reading in the Data 
     Data=pd.read_csv(fn)
     Data=vis.getCondenseSubjectList(Data)
@@ -38,6 +38,7 @@ def ProcessMacroFeatData(fn,outDir='./',sigma=5,slideNorm=False,dimReduction=Fal
      
         idx = Data[(Data['Component'] == comp) & (Data['Subject'] == slide)].index
         Data.ix[idx,"Curvature"]=-1*Data.ix[idx,"Curvature"] 
+    print("Correct Curvature Sign for Subjects - Quality Control Step")
 
     ################################## Predictive Features (X) ##########################################
     # create a DataFrame called `X` holding the predictive features.
@@ -50,6 +51,8 @@ def ProcessMacroFeatData(fn,outDir='./',sigma=5,slideNorm=False,dimReduction=Fal
     ############### Withing Slide Smoothing (OPTINAL - Data is already smoothed) ########################
 
     X=pt.smoothSlideFeat(X,dataHdr,sigma)
+
+    print("Within Slide Normalization Applied")
 
  ############################## Bewteen Subject Normalization #########################################
 
@@ -77,4 +80,4 @@ def ProcessMacroFeatData(fn,outDir='./',sigma=5,slideNorm=False,dimReduction=Fal
     print(Xout.head(n=5))
     print("###########################################################################################")
     Data=pd.concat([X,dataHdr],axis=1)
-    return Data,Xout,dataHdr
+    return Xout
