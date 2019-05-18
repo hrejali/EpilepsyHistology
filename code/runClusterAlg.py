@@ -253,7 +253,7 @@ def getDescriptivePlots(X,Data,fn_List,outDir,descriptor):
         
         # Obtain radar Data Frame
         df=vis.create_radarDataFrame(X.iloc[:,l_bound:u_bound],Data)
-        
+
         # Create a color palette:
         my_palette = plt.cm.get_cmap("Set2", len(df.index))
 
@@ -347,7 +347,9 @@ def func(pct):
     return "{:.1f}%".format(pct)
 
 def genSpiderPlot(df,palette):
+    # number of Groups is the number of rows in dataframe df
+    numGroups=len(df.index)
     # Loop to plot
-    for row in range(0, len(df.index)):
-        vis.make_spider(df,row=row, title='group '+df['group'][row], color=palette(row))
+    for row in range(0, numGroups):
+        vis.make_spider(df,row=row, title='group '+df['group'][row], color=palette(row),numGroups=numGroups)
     

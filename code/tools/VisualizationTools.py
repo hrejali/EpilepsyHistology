@@ -418,7 +418,7 @@ def make_spider(df,row, title, color,numGroups=4):
     angles += angles[:1]
  
     # Initialise the spider plot
-    ax = plt.subplot(np.ceil(numGroups/2),2,row+1, polar=True, )
+    ax = plt.subplot(np.ceil(numGroups/2.0),2,row+1, polar=True, )
  
     # If you want the first axis to be on top:
     ax.set_theta_offset(pi / 2)
