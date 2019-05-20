@@ -23,7 +23,7 @@ from sklearn.cluster import SpectralClustering
 from sklearn.metrics import silhouette_score
 
 
-def runClusterAlg(Data,X,fn_List,outDir,hdrString,n_maxClusters=10):
+def runClusterAlg(Data,X,fn_List,outDir,hdrString,n_maxClusters=10,dimReduction=False):
     outDir=outDir+'/ClusterAlg'
 
     if not os.path.exists(outDir):
@@ -75,11 +75,11 @@ def runClusterAlg(Data,X,fn_List,outDir,hdrString,n_maxClusters=10):
                 "clusterHdr":clusterHdr
             }
 
-            getDescriptivePlots(X,Data,fn_List,outDir,descriptor) 
+            getDescriptivePlots(X,Data,fn_List,outDir,descriptor,dimReduction=dimReduction) 
 
 
 
-def runDBSCANAlg(Data,X,fn_List,outDir,hdrString):
+def runDBSCANAlg(Data,X,fn_List,outDir,hdrString,dimReduction=False):
     name='DBSCAN'
     outDir=outDir+'/'+name
 
@@ -90,8 +90,8 @@ def runDBSCANAlg(Data,X,fn_List,outDir,hdrString):
     idx=Data[(Data["Analyze"] == True)].index
     idx_Ignore=Data[(Data["Analyze"] == False)].index
 
-    epsVals=[0.1,0.2,0.5,0.8,1,1.5,2,2.5,3,4,5]
-    minSamples=[5,10,15,25,50,75,100]
+    epsVals=[0.1,0.5,0.8,1,1.5,2,3,5]
+    minSamples=[5,10,25,50,100]
     
     for epsVal in epsVals:
         for NumSamples in minSamples:
@@ -118,14 +118,14 @@ def runDBSCANAlg(Data,X,fn_List,outDir,hdrString):
                     "clusterHdr":clusterHdr
                 }
                 
-                getDescriptivePlots(X,Data,fn_List,outDir,descriptor)
+                getDescriptivePlots(X,Data,fn_List,outDir,descriptor,dimReduction=dimReduction)
 
 
             else:
                 continue
         
 
-def runRandForestAlg(Data,X,fn_List,outDir,hdrString):
+def runRandForestAlg(Data,X,fn_List,outDir,hdrString,dimReduction=False):
     name='RandomForest'
     outDir=outDir+'/'+name
 
@@ -157,11 +157,11 @@ def runRandForestAlg(Data,X,fn_List,outDir,hdrString):
         "clusterHdr":clusterHdr
     }
  
-    getDescriptivePlots(X,Data,fn_List,outDir,descriptor)
+    getDescriptivePlots(X,Data,fn_List,outDir,descriptor,dimReduction=dimReduction)
 
 
 
-def getDescriptivePlots(X,Data,fn_List,outDir,descriptor):
+def getDescriptivePlots(X,Data,fn_List,outDir,descriptor,dimReduction=False):
     ##################################################################################################################
     # Description:
     # Generate Descriptive Plots that describe the results of clustering.
@@ -244,15 +244,11 @@ def getDescriptivePlots(X,Data,fn_List,outDir,descriptor):
 
     Features=["Density","Area","Eccentricity"]
     my_dpi=96
-    for i,feat in enumerate(Features):
-        
+    if(dimReduction):
         plt.figure(figsize=(1000/my_dpi, 1000/my_dpi), dpi=my_dpi)
 
-        l_bound=0+10*i
-        u_bound=10*(i+1)
-        
         # Obtain radar Data Frame
-        df=vis.create_radarDataFrame(X.iloc[:,l_bound:u_bound],Data)
+        df=vis.create_radarDataFrame(X,Data)
 
         # Create a color palette:
         my_palette = plt.cm.get_cmap("Set2", len(df.index))
@@ -260,6 +256,24 @@ def getDescriptivePlots(X,Data,fn_List,outDir,descriptor):
         genSpiderPlot(df,my_palette)
         plt.savefig(out+'/'+ descriptor['model'] +'_'+feat+'-RadarPlot_' + descriptor['clusterHdr'] + '_' + descriptor['dataHdr'] +'.png')
         plt.close()
+
+    else:    
+        for i,feat in enumerate(Features):
+        
+            plt.figure(figsize=(1000/my_dpi, 1000/my_dpi), dpi=my_dpi)
+
+            l_bound=0+10*i
+            u_bound=10*(i+1)
+        
+            # Obtain radar Data Frame
+            df=vis.create_radarDataFrame(X.iloc[:,l_bound:u_bound],Data)
+
+            # Create a color palette:
+            my_palette = plt.cm.get_cmap("Set2", len(df.index))
+
+            genSpiderPlot(df,my_palette)
+            plt.savefig(out+'/'+ descriptor['model'] +'_'+feat+'-RadarPlot_' + descriptor['clusterHdr'] + '_' + descriptor['dataHdr'] +'.png')
+            plt.close()
     
 
     # =====================================
