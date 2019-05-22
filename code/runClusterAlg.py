@@ -23,7 +23,7 @@ from sklearn.cluster import SpectralClustering
 from sklearn.metrics import silhouette_score
 
 
-def runClusterAlg(Data,X,fn_List,outDir,hdrString,n_maxClusters=10,dimReduction=False):
+def runClusterAlg(Data,X,fn_List,outDir,hdrString,n_maxClusters=6,dimReduction=False):
     outDir=outDir+'/ClusterAlg'
 
     if not os.path.exists(outDir):
@@ -90,7 +90,7 @@ def runDBSCANAlg(Data,X,fn_List,outDir,hdrString,dimReduction=False):
     idx=Data[(Data["Analyze"] == True)].index
     idx_Ignore=Data[(Data["Analyze"] == False)].index
 
-    epsVals=[0.1,0.5,0.8,1,1.5,2,3,5]
+    epsVals=[0.1,0.5,1,1.5,2,3,5]
     minSamples=[5,10,25,50,100]
     
     for epsVal in epsVals:
@@ -246,7 +246,7 @@ def getDescriptivePlots(X,Data,fn_List,outDir,descriptor,dimReduction=False):
     my_dpi=96
     if(dimReduction):
         plt.figure(figsize=(1000/my_dpi, 1000/my_dpi), dpi=my_dpi)
-
+        feat="PCA"
         # Obtain radar Data Frame
         df=vis.create_radarDataFrame(X,Data)
 
