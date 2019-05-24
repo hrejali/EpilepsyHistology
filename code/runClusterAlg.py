@@ -67,7 +67,7 @@ def runClusterAlg(Data,X,Xhdr,fn_List,outDir,hdrString,n_maxClusters=10,dimReduc
             # Labels to Ignore
             Data.ix[idx_Ignore,"Clusters"]=-10
             silhouette_avg = silhouette_score(X.iloc[idx,:], algorithm.labels_)
-            clusterHdr = 'Silhouette-'+silhouette_avg +'_n_clusters-' + str(n_clusters)
+            clusterHdr = 'Silhouette-'+str(silhouette_avg) +'_n_clusters-' + str(n_clusters)
 
             descriptor = {
                 "model": name,

@@ -107,7 +107,7 @@ def clusterData(fn_Table,fn_List,outDir,n_maxClusters=30,sigma=5,slideNorm=False
         # Only analyze data with boolean == TRUE 
         Data["Analyze"]=(Data["macroLabel"] == cluster_num)
 
-        #rc.runRandForestAlg(Data,X,Xhdr,fn_List,outDir,hdr,dimReduction=dimReduction)
+        rc.runRandForestAlg(Data,X,Xhdr,fn_List,outDir,hdr,dimReduction=dimReduction)
         rc.runClusterAlg(Data,X,Xhdr,fn_List,outDir,hdr,dimReduction=dimReduction)
         # THIS NEEDS TO RUN ON ITS OWN 
         #rc.runDBSCANAlg(Data,X,Xhdr,fn_List,outDir,hdr,dimReduction=dimReduction)
