@@ -23,7 +23,7 @@ from sklearn.cluster import SpectralClustering
 from sklearn.metrics import silhouette_score
 
 
-def runClusterAlg(Data,X,fn_List,outDir,hdrString,n_maxClusters=6,dimReduction=False):
+def runClusterAlg(Data,X,Xhdr,fn_List,outDir,hdrString,n_maxClusters=10,dimReduction=False):
     outDir=outDir+'/ClusterAlg'
 
     if not os.path.exists(outDir):
@@ -55,7 +55,7 @@ def runClusterAlg(Data,X,fn_List,outDir,hdrString,n_maxClusters=6,dimReduction=F
     
         clustering_algorithms = (
             ('KMeans', k),
-            ('Ward',ward),
+            #('Ward',ward),
             )
 
         idx=Data[(Data["Analyze"] == True)].index
@@ -66,20 +66,20 @@ def runClusterAlg(Data,X,fn_List,outDir,hdrString,n_maxClusters=6,dimReduction=F
             Data.ix[idx,"Clusters"]=algorithm.labels_
             # Labels to Ignore
             Data.ix[idx_Ignore,"Clusters"]=-10
-
-            clusterHdr = 'n_clusters-' + str(n_clusters)
+            silhouette_avg = silhouette_score(X.iloc[idx,:], algorithm.labels_)
+            clusterHdr = 'Silhouette-'+silhouette_avg +'_n_clusters-' + str(n_clusters)
 
             descriptor = {
                 "model": name,
                 "dataHdr": hdrString,
                 "clusterHdr":clusterHdr
             }
+            Xhdr["Clusters"]=Data["Clusters"]
+            getDescriptivePlots(X,Data,Xhdr,fn_List,outDir,descriptor,dimReduction=dimReduction) 
 
-            getDescriptivePlots(X,Data,fn_List,outDir,descriptor,dimReduction=dimReduction) 
 
 
-
-def runDBSCANAlg(Data,X,fn_List,outDir,hdrString,dimReduction=False):
+def runDBSCANAlg(Data,X,Xhdr,fn_List,outDir,hdrString,dimReduction=False):
     name='DBSCAN'
     outDir=outDir+'/'+name
 
@@ -117,15 +117,12 @@ def runDBSCANAlg(Data,X,fn_List,outDir,hdrString,dimReduction=False):
                     "dataHdr": hdr,
                     "clusterHdr":clusterHdr
                 }
-                
-                getDescriptivePlots(X,Data,fn_List,outDir,descriptor,dimReduction=dimReduction)
+                Xhdr["Clusters"]=Data["Clusters"]
+                getDescriptivePlots(X,Data,Xhdr,fn_List,outDir,descriptor,dimReduction=dimReduction)
 
-
-            else:
-                continue
         
 
-def runRandForestAlg(Data,X,fn_List,outDir,hdrString,dimReduction=False):
+def runRandForestAlg(Data,X,Xhdr,fn_List,outDir,hdrString,dimReduction=False):
     name='RandomForest'
     outDir=outDir+'/'+name
 
@@ -156,12 +153,12 @@ def runRandForestAlg(Data,X,fn_List,outDir,hdrString,dimReduction=False):
         "dataHdr": hdrString,
         "clusterHdr":clusterHdr
     }
- 
-    getDescriptivePlots(X,Data,fn_List,outDir,descriptor,dimReduction=dimReduction)
+    Xhdr["Clusters"]=Data["Clusters"]
+    getDescriptivePlots(X,Data,Xhdr,fn_List,outDir,descriptor,dimReduction=dimReduction)
 
 
 
-def getDescriptivePlots(X,Data,fn_List,outDir,descriptor,dimReduction=False):
+def getDescriptivePlots(X,Data,Xhdr,fn_List,outDir,descriptor,dimReduction=False):
     ##################################################################################################################
     # Description:
     # Generate Descriptive Plots that describe the results of clustering.
@@ -289,13 +286,19 @@ def getDescriptivePlots(X,Data,fn_List,outDir,descriptor,dimReduction=False):
 
     plt.figure(figsize=[150,150])
 
+    index=0 
     for i,subj in enumerate(SubjectList):
-        ax = plt.subplot(round(len(SubjectList)/3),3,i+1)
 
         idx= Data[(Data["SubjId"] == SubjectList[i])].index
-    
         P,LabelList=getlabelProportion(Data.iloc[idx,:],LabelList)
-   
+        
+        # Skip Subplot if sum of Proportion is Zero
+        if(np.sum(P)==0):
+            continue
+        
+        ax = plt.subplot(round(len(SubjectList)/3),3,index+1)
+        index=index+1
+           
     
         wedges, texts, autotexts = ax.pie(P, autopct=lambda pct: func(pct),
                                   textprops=dict(color="w"))
@@ -322,6 +325,14 @@ def getDescriptivePlots(X,Data,fn_List,outDir,descriptor,dimReduction=False):
     plt.savefig(out+'/'+ descriptor['model'] +'_PieChart_'+ descriptor['clusterHdr'] + '_' + descriptor['dataHdr'] +'.png')
     plt.close()
     # =====================================
+
+    # ========= 6) Save Data ==============
+    out=outDir + "/Data"
+
+    if not os.path.exists(out):
+        os.makedirs(out)
+    Xhdr.to_csv(out+'/'+ 'Xhdr_'+descriptor['model'] +'_'+ descriptor['clusterHdr'] + '_' + descriptor['dataHdr'] +'.png')
+
 
 
 # These methods are required to generate the Pie Charts    
@@ -352,7 +363,11 @@ def getlabelProportion(df,LabelList):
     for i,labelVal in enumerate(LabelList):
         labelOccurence=len(df[(df["Clusters"] == labelVal)])
         
-        P[i]=labelOccurence/total
+        #Prevent Division by Zero.
+        if(total==0):
+            P[i]=0
+        else:
+            P[i]=labelOccurence/total
     
     
     return P,LabelList

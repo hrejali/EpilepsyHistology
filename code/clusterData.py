@@ -29,7 +29,6 @@ def main(fn_Table,fn_List,outDir,sigma,slideNorm,dimReduction):
     clusterData(fn_Table,fn_List,outDir,sigma=sigma,slideNorm=slideNorm,dimReduction=dimReduction)
 
 def clusterData(fn_Table,fn_List,outDir,n_maxClusters=30,sigma=5,slideNorm=False,dimReduction=False):
-
     # Header info used to save images
     #hdrString='Smoothing-'+str(sigma)+'_WithinSlideNormalization-'+str(slideNorm)+'_dimReduction-'+str(dimReduction)
     hdrString='Smoothing-'+str(sigma)+'_dimReduction-'+str(dimReduction)
@@ -41,6 +40,16 @@ def clusterData(fn_Table,fn_List,outDir,n_maxClusters=30,sigma=5,slideNorm=False
     # Xhdr is the Header info 
 
     Data,X,Xhdr=gd.getPostProcessData(fn=fn_Table,outDir=outDir,sigma=sigma,slideNorm=slideNorm,dimReduction=dimReduction)
+
+    ######################################### SAVE DATA ############################################
+    out=outDir + "/Data"
+
+    if not os.path.exists(out):
+        os.makedirs(out)
+    
+    Data.to_csv(out+"/Data_"+hdrString+".csv")
+    X.to_csv(out+"/X_"+hdrString+".csv")
+    ################################################################################################
 
     plt.figure(figsize=[10,10])
     sns.pairplot(X)
@@ -56,19 +65,25 @@ def clusterData(fn_Table,fn_List,outDir,n_maxClusters=30,sigma=5,slideNorm=False
 
     k.fit(XMacro)
     # Assign Labels
-    Data["macroLabel"]=k.labels_
+    Data["macroLabel"]=k.labels_ 
     Data["Clusters"]=k.labels_
+
+    ###################################### SAVE MACRO DATA ##########################################
+    XMacro.to_csv(out+"/XMacro.csv")
+    Xhdr["macroLabel"]=k.labels_
+    Xhdr.to_csv(out+"/Xhdr.csv")
+    #################################################################################################
 
     ## Plotting Average Density and Size Profiles
     silhouette_avg=vis.getSilhouettePlot(XMacro,k.labels_,n_clusters)
     silhouette_avg = float("%0.3f" % silhouette_avg)
-    plt.savefig(outDir + '/MacroClustering_' + name + '_SilhouetteAvg-'+str(silhouette_avg)+'_n_clusters-' + str(n_clusters) + hdrString + '.png')
+    plt.savefig(outDir + '/MacroClustering_' + name + '_SilhouetteAvg-'+str(silhouette_avg)+'_n_clusters-' + str(n_clusters) + '.png')
     plt.close()
 
     # changed this to a read only process to have multple proceses to acess file
     with h5py.File(fn_List, "r") as mat:
         vis.DispSegmentation(mat,Data)
-        plt.savefig(outDir +'/MacroClustering_'+ name + '_ClusterResults_SilhouetteAvg-'+str(silhouette_avg)+'_n_clusters-' + str(n_clusters) + hdrString +'.png')
+        plt.savefig(outDir +'/MacroClustering_'+ name + '_ClusterResults_SilhouetteAvg-'+str(silhouette_avg)+'_n_clusters-' + str(n_clusters) +'.png')
         plt.close()
 
     # Get Cluster Label Corresponding to Out of Plane Slicing -- This is the Cluster with the highest avg thickness
@@ -92,10 +107,10 @@ def clusterData(fn_Table,fn_List,outDir,n_maxClusters=30,sigma=5,slideNorm=False
         # Only analyze data with boolean == TRUE 
         Data["Analyze"]=(Data["macroLabel"] == cluster_num)
 
-        rc.runRandForestAlg(Data,X,fn_List,outDir,hdr,dimReduction=dimReduction)
-        rc.runClusterAlg(Data,X,fn_List,outDir,hdr,dimReduction=dimReduction)
+        #rc.runRandForestAlg(Data,X,Xhdr,fn_List,outDir,hdr,dimReduction=dimReduction)
+        rc.runClusterAlg(Data,X,Xhdr,fn_List,outDir,hdr,dimReduction=dimReduction)
         # THIS NEEDS TO RUN ON ITS OWN 
-        #rc.runDBSCANAlg(Data,X,fn_List,outDir,hdr,dimReduction=dimReduction)
+        #rc.runDBSCANAlg(Data,X,Xhdr,fn_List,outDir,hdr,dimReduction=dimReduction)
 
 
 if __name__ == "__main__":
