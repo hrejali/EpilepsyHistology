@@ -1,6 +1,6 @@
 # EpilepsyHistology ( In Development )
 
-1) The purpose of the tools found in this repository is to provide a way to sampl   An error occurred while sending the request.e cortical laminae in 2D images (Histology) by creating a coordinate system for individual slides.
+1) The purpose of the tools found in this repository is to provide a way to sample cortical laminae in 2D images (Histology) by creating a coordinate system for individual slides.
 
 2) Provide a tool that allows alignment of 1D profiles across multiple subjects and slides, to a common reference, obtained from coordinate system - this helps reduce the inherent anatomical variability from one are of the cortex from another. 
 
